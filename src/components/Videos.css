@@ -44,6 +44,59 @@
 .videos-upload-video {
   right: 300px;
 }
+.video-url,
+.name-of-video {
+  font-size: 29px;
+  color: #200b0070;
+  position: absolute;
+  left: 40px;
+  top: 25px;
+}
+.name-of-video {
+  top: 75px;
+}
+.input-box-url,
+.input-box-name {
+  padding-left: 20px;
+  font-size: 29px;
+  color: #200b0070;
+  width: 602px;
+  height: 33px;
+  border-radius: 61px;
+  border: 5px solid #200b0070;
+  position: absolute;
+  left: 150px;
+  top: 17px;
+}
+.input-box-name {
+  width: 552px;
+  left: 200px;
+  top: 72px;
+}
+.upload-box {
+  position: absolute;
+  left: 718px;
+  top: 110px;
+  border-radius: 61px;
+  border: 5px solid #2f1100;
+  z-index: 1;
+  width: 1000px;
+  height: 137px;
+  background-color: white;
+}
+.videos-submit {
+  background-color: #200b00;
+  color: white;
+  font-size: 29px;
+  width: 151px;
+  height: 42px;
+  border-radius: 78px;
+  border: none;
+  position: absolute;
+  left: 810px;
+  top: 73px;
+}
+
 .videos-logout {
   right: 137px;
   background-color: #fff2f2;

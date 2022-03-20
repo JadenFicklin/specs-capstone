@@ -11,6 +11,7 @@ function Videos() {
   const [button3, setButton3] = useState(true);
   const [button4, setButton4] = useState(true);
   const [comments, setComments] = useState(true);
+  const [upload, setUpload] = useState(false);
 
   useEffect(() => {
     !stats && setTimeout(() => setStats(true), 200);
@@ -66,7 +67,18 @@ function Videos() {
         >
           top videos
         </div>
-        <div className="videos-upload-video">upload video</div>
+        <div className="videos-upload-video" onClick={() => setUpload(!upload)}>
+          upload video
+        </div>
+        {upload && (
+          <form className="upload-box">
+            <div className="video-url">video url</div>
+            <div className="name-of-video">name of video</div>
+            <input className="input-box-url"></input>
+            <input className="input-box-name"></input>
+            <button className="videos-submit">SUBMIT</button>
+          </form>
+        )}
         <div className="video"></div>
 
         {/* stats */}
