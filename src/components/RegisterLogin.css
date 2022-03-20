@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&family=Londrina+Solid&family=Oswald&family=Roboto:ital@0;1&family=Source+Sans+Pro:wght@200&display=swap");
+
+* {
+  font-family: "Londrina Solid", cursive;
+  font-weight: 500;
+  color: #311500;
+  margin: 0px;
+}
+
+body {
+  background-color: #fffcf2;
+}
+
+.line1,
+.line2 {
+  position: absolute;
+  left: 49.5%;
+  width: 7px;
+  height: 340px;
+  background-color: #542300;
+  opacity: 17%;
+  /* z-index: -1; */
+}
+.line2 {
+  height: 366px;
+  top: 63.6%;
+}
+
+.logo {
+  position: absolute;
+  left: -180px;
+  top: 320px;
+  z-index: -1;
+}
+
+.outer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.right {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+}
+.left {
+  position: absolute;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+}
+
+.success-page {
+  position: absolute;
+  z-index: 1;
+}
+
+.register-picture {
+  position: absolute;
+  top: 20%;
+  left: 27%;
+  width: 390px;
+  height: 390px;
+  background-image: url("../pictures/S\ \(12\).png");
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: none;
+}
+
+.register-header {
+  position: absolute;
+  left: 40%;
+  top: 43%;
+  font-size: 48px;
+}
+
+.register-username,
+.register-firstname,
+.register-lastname,
+.register-password,
+.register-submit {
+  position: absolute;
+  left: 27%;
+  top: 50%;
+  font-size: 29px;
+  width: 250px;
+  border-radius: 78px;
+  padding-left: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #331500;
+}
+.register-firstname {
+  top: 56%;
+}
+.register-lastname {
+  top: 62%;
+}
+.register-password {
+  top: 68%;
+}
+.register-submit {
+  left: 39.5%;
+  top: 75%;
+  padding: 0px;
+  width: 151px;
+  color: white;
+  background-color: #311500;
+  cursor: pointer;
+}
+
+.login-picture {
+  position: absolute;
+  top: 22%;
+  left: 27%;
+  width: 390px;
+  height: 390px;
+  background-image: url("../pictures/S\ \(11\).png");
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: none;
+}
+
+.login-header {
+  position: absolute;
+  left: 42.5%;
+  top: 43%;
+  font-size: 48px;
+}
+
+.login-username,
+.login-password,
+.login-button {
+  position: absolute;
+  left: 27%;
+  top: 50%;
+  font-size: 29px;
+  width: 250px;
+  border-radius: 78px;
+  padding-left: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #331500;
+}
+
+.login-username {
+  top: 50%;
+}
+.login-password {
+  top: 56%;
+}
+.login-button {
+  left: 39.5%;
+  top: 63%;
+  padding: 0px;
+  width: 151px;
+  color: white;
+  background-color: #311500;
+  cursor: pointer;
+}

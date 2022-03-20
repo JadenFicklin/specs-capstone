@@ -1,0 +1,235 @@
+.videos-outer {
+  width: 97.2%;
+  height: 94.8vh;
+  border: 26px solid #73470525;
+}
+
+.video {
+  position: absolute;
+  top: 11%;
+  left: 6%;
+  width: 88%;
+  height: 74%;
+  background-image: url("../pictures/Best-Animated-Shows-SS12.webp");
+  background-size: cover;
+  background-position: top;
+  background-repeat: none;
+}
+
+.videos-logo {
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  left: 100px;
+  z-index: -1;
+}
+.videos-website-name {
+  cursor: pointer;
+  position: absolute;
+  top: 40px;
+  left: 200px;
+  font-size: 48px;
+}
+.videos-top-videos,
+.videos-upload-video,
+.videos-logout {
+  position: absolute;
+  right: 500px;
+  top: 50px;
+  color: #200b00;
+  opacity: 40%;
+  font-size: 29px;
+  transition: 0.1s;
+}
+.videos-upload-video {
+  right: 300px;
+}
+.videos-logout {
+  right: 137px;
+  background-color: #fff2f2;
+  border: none;
+  transition: 0.1s;
+}
+.videos-logout:hover,
+.videos-upload-video:hover,
+.videos-top-videos:hover {
+  border-bottom: 5px solid black;
+  cursor: pointer;
+}
+
+/* before */
+.stats,
+.comments {
+  cursor: pointer;
+  font-size: 29px;
+  background-color: white;
+  border: 4px solid #200b00;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 59px;
+  position: absolute;
+  bottom: 60px;
+  box-shadow: 4px 6px #888888;
+}
+.stats {
+  width: 153px;
+  left: 70px;
+}
+
+/* after */
+.videos-stats-after {
+  cursor: pointer;
+  font-size: 29px;
+  background-color: #ffffff;
+  border: solid 4px #2e1b00;
+  height: 59px;
+  width: 153px;
+  border-radius: 25px;
+  position: absolute;
+  bottom: 52px;
+  left: 75px;
+  transition: 0.05s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comments {
+  width: 200px;
+  right: 70px;
+}
+
+.comments-after {
+  cursor: pointer;
+  font-size: 29px;
+  background-color: #ffffff;
+  border: solid 4px #2e1b00;
+  height: 59px;
+  width: 200px;
+  border-radius: 25px;
+  position: absolute;
+  bottom: 49px;
+  right: 63px;
+  transition: 0.05s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.videos-downvote,
+.videos-upvote,
+.videos-right {
+  cursor: pointer;
+  background-color: #c7c7c7;
+  border: solid 4px #2e1b00;
+  height: 49px;
+  width: 91px;
+  border-radius: 30px;
+  box-shadow: 4px 6px #888888;
+  position: absolute;
+  top: 88%;
+  transition: 0.05s;
+}
+.videos-downvote {
+  left: 30%;
+}
+.videos-downvote-after {
+  cursor: pointer;
+  background-color: #c7c7c7;
+  border: solid 4px #2e1b00;
+  height: 49px;
+  width: 91px;
+  border-radius: 30px;
+  position: absolute;
+  top: 88.8%;
+  left: 30.3%;
+  transition: 0.05s;
+}
+.videos-upvote {
+  left: 37%;
+}
+.videos-upvote-after {
+  cursor: pointer;
+  background-color: #c7c7c7;
+  border: solid 4px #2e1b00;
+  height: 49px;
+  width: 91px;
+  border-radius: 30px;
+  position: absolute;
+  top: 88.8%;
+  left: 37.3%;
+  transition: 0.05s;
+}
+.videos-left {
+  cursor: pointer;
+  background-color: #c7c7c7;
+  border: solid 4px #2e1b00;
+  height: 49px;
+  width: 91px;
+  border-radius: 30px;
+  box-shadow: 4px 6px #888888;
+  position: absolute;
+  top: 88%;
+  transition: 0.05s;
+  right: 36.7%;
+}
+.videos-left-after {
+  cursor: pointer;
+  background-color: #c7c7c7;
+  border: solid 4px #2e1b00;
+  height: 49px;
+  width: 91px;
+  border-radius: 30px;
+  position: absolute;
+  top: 89%;
+  right: 36.3%;
+  transition: 0.05s;
+}
+.videos-right {
+  right: 30%;
+}
+.videos-right-after {
+  cursor: pointer;
+  background-color: #c7c7c7;
+  border: solid 4px #2e1b00;
+  height: 49px;
+  width: 91px;
+  border-radius: 30px;
+  position: absolute;
+  top: 89%;
+  right: 29.7%;
+  transition: 0.05s;
+}
+
+.arrow1,
+.arrow2,
+.arrow3,
+.arrow4 {
+  position: absolute;
+  top: 0px;
+  left: 27px;
+  clip-path: polygon(50% 18%, 0% 100%, 100% 100%);
+  width: 34px;
+  height: 34px;
+  background-color: #2e1b00;
+}
+.arrow1 {
+  transform: rotate(180deg);
+  top: 12px;
+}
+.arrow2 {
+  transform: rotate(0deg);
+  top: 4px;
+}
+.arrow3 {
+  transform: rotate(270deg);
+  top: 7px;
+  left: 20px;
+}
+.arrow4 {
+  transform: rotate(90deg);
+  top: 7px;
+  left: 37px;
+}
