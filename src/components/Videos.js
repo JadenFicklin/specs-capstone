@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Logo from "../pictures/S.mp4";
 import "./Videos.css";
+import axios from "axios";
 
 function Videos() {
   const [stats, setStats] = useState(true);
@@ -12,6 +13,11 @@ function Videos() {
   const [button4, setButton4] = useState(true);
   const [comments, setComments] = useState(true);
   const [upload, setUpload] = useState(false);
+
+  const [url, setUrl] = useState("");
+  const [name, setName] = useState("");
+
+  const [vid, setVid] = useState("");
 
   useEffect(() => {
     !stats && setTimeout(() => setStats(true), 200);
@@ -31,6 +37,30 @@ function Videos() {
   useEffect(() => {
     !comments && setTimeout(() => setComments(true), 200);
   }, [comments]);
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: "http://localhost:5000/api/getvideo",
+    })
+      .then((res) => setVid(res.data.url))
+      .catch((err) => console.log(err));
+  }, []);
+
+  //post video
+  const handleSubmit1 = (e) => {
+    e.preventDefault();
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/uploadvideo",
+      data: {
+        url: url,
+        name: name,
+      },
+    })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
 
   const videoSrc = Logo;
   let navigate = useNavigate();
@@ -71,15 +101,30 @@ function Videos() {
           upload video
         </div>
         {upload && (
-          <form className="upload-box">
+          <form className="upload-box" onSubmit={handleSubmit1}>
             <div className="video-url">video url</div>
             <div className="name-of-video">name of video</div>
-            <input className="input-box-url"></input>
-            <input className="input-box-name"></input>
+            <input
+              className="input-box-url"
+              onChange={(e) => setUrl(e.target.value)}
+            ></input>
+            <input
+              className="input-box-name"
+              onChange={(e) => setName(e.target.value)}
+            ></input>
             <button className="videos-submit">SUBMIT</button>
           </form>
         )}
-        <div className="video"></div>
+
+        <div className="video">
+          <ReactPlayer
+            url={vid}
+            playing={true}
+            controls
+            width={"1680px"}
+            height={"740px"}
+          />
+        </div>
 
         {/* stats */}
         {stats ? (

@@ -8,8 +8,13 @@ function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
+  const [accountCreated, setAccountCreated] = useState(false);
 
   let navigate = useNavigate();
+
+  useEffect(() => {
+    accountCreated && navigate("/success");
+  }, [accountCreated]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +28,7 @@ function Register() {
         password: password,
       },
     })
-      .then(({ data: success }) => success && navigate("/success"))
+      .then((res) => setAccountCreated(res.data))
       .catch((err) => console.log(err + "this is the error"));
     setUsername("");
     setFirstName("");
@@ -67,6 +72,7 @@ function Register() {
           />
           <button className="register-submit">Submit</button>
         </form>
+        {accountCreated ? <h2>Account created!</h2> : null}
       </div>
     </>
   );

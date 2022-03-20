@@ -8,9 +8,7 @@
   position: absolute;
   top: 11%;
   left: 6%;
-  width: 88%;
-  height: 74%;
-  background-image: url("../pictures/Best-Animated-Shows-SS12.webp");
+
   background-size: cover;
   background-position: top;
   background-repeat: none;
@@ -78,14 +76,15 @@
   left: 718px;
   top: 110px;
   border-radius: 61px;
-  border: 5px solid #2f1100;
+  border: 5px solid #311500;
   z-index: 1;
   width: 1000px;
   height: 137px;
   background-color: white;
 }
 .videos-submit {
-  background-color: #200b00;
+  cursor: pointer;
+  background-color: #311500;
   color: white;
   font-size: 29px;
   width: 151px;

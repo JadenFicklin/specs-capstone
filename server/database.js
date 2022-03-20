@@ -53,6 +53,23 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+//upload video to database video table
+app.post("/api/uploadvideo", async (req, res) => {
+  const { url, name } = req.body;
+
+  return sequelize
+    .query(`INSERT INTO videos (url, name) VALUES ('${url}', '${name}')`)
+    .then((result) => res.send(result).status(200));
+});
+
+// get video from the database
+app.get("/api/getvideo", async (req, res) => {
+  const { url, name } = req.body;
+  return sequelize
+    .query(`SELECT * FROM videos`)
+    .then((result) => res.send(result[0][0]).status(200));
+});
+
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
 });

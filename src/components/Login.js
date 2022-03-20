@@ -1,17 +1,24 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./RegisterLogin.css";
 import ReactPlayer from "react-player";
 import Logo from "../pictures/S.mp4";
 import "./RegisterLogin.css";
+
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const videoSrc = Logo;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    isLoggedIn && navigate("/videos");
+  }, [isLoggedIn]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
