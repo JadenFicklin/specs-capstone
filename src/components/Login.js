@@ -5,16 +5,37 @@ import ReactPlayer from "react-player";
 import Logo from "../pictures/S.mp4";
 import "./RegisterLogin.css";
 
+// recoil values
+import { usernameAtom } from "../atoms/global";
+import { useRecoilState } from "recoil";
+
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const videoSrc = Logo;
 
-  const [username, setUsername] = useState("");
+  //added recoil, this makes the username value global if you use the useRecoil on the other page
+  const [username, setUsername] = useRecoilState(usernameAtom);
+
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   let navigate = useNavigate();
+
+  //set isloggedin on backend equal to true
+  if (isLoggedIn === true) {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/isloggedin",
+      data: {
+        username: username,
+      },
+    })
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => console.log(err));
+  }
 
   useEffect(() => {
     isLoggedIn && navigate("/videos");
@@ -33,7 +54,7 @@ function Login() {
       .then((res) => setIsLoggedIn(res.data))
       .catch((err) => console.log(err + "this is the error"));
   };
-  console.log(isLoggedIn);
+
   return (
     <>
       <div className="line1"></div>

@@ -127,7 +127,7 @@
 }
 .stats {
   width: 153px;
-  left: 70px;
+  left: 110px;
 }
 
 /* after */
@@ -141,7 +141,7 @@
   border-radius: 25px;
   position: absolute;
   bottom: 52px;
-  left: 75px;
+  left: 115px;
   transition: 0.05s;
   display: flex;
   justify-content: center;
@@ -150,7 +150,7 @@
 
 .comments {
   width: 200px;
-  right: 70px;
+  right: 125px;
 }
 
 .comments-after {
@@ -163,7 +163,7 @@
   border-radius: 25px;
   position: absolute;
   bottom: 49px;
-  right: 63px;
+  right: 118px;
   transition: 0.05s;
   display: flex;
   justify-content: center;
@@ -185,7 +185,7 @@
   transition: 0.05s;
 }
 .videos-downvote {
-  left: 30%;
+  left: 37%;
 }
 .videos-downvote-after {
   cursor: pointer;
@@ -196,11 +196,11 @@
   border-radius: 30px;
   position: absolute;
   top: 88.8%;
-  left: 30.3%;
+  left: 37.3%;
   transition: 0.05s;
 }
 .videos-upvote {
-  left: 37%;
+  left: 30%;
 }
 .videos-upvote-after {
   cursor: pointer;
@@ -211,7 +211,7 @@
   border-radius: 30px;
   position: absolute;
   top: 88.8%;
-  left: 37.3%;
+  left: 30.3%;
   transition: 0.05s;
 }
 .videos-left {
@@ -284,4 +284,15 @@
   transform: rotate(90deg);
   top: 7px;
   left: 37px;
+}
+.comments-box {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  background-color: white;
+  color: #200b00;
+  opacity: 40%;
+  font-size: 29px;
+  transition: 0.1s;
+  right: 300px;
 }

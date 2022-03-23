@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Logo from "../pictures/S.mp4";
@@ -6,48 +6,95 @@ import "./Videos.css";
 import axios from "axios";
 
 function Videos() {
+  //button press animation effect
   const [stats, setStats] = useState(true);
   const [button, setButton] = useState(true);
   const [button2, setButton2] = useState(true);
   const [button3, setButton3] = useState(true);
   const [button4, setButton4] = useState(true);
   const [comments, setComments] = useState(true);
-  const [upload, setUpload] = useState(false);
 
+  //open the upload video box / comments box
+  const [upload, setUpload] = useState(false);
+  const [openComments, setOpenComments] = useState(false);
+
+  //upload url and name to database
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
 
   const [vid, setVid] = useState("");
 
+  //timer for button animations
   useEffect(() => {
     !stats && setTimeout(() => setStats(true), 200);
   }, [stats]);
+
   useEffect(() => {
     !button && setTimeout(() => setButton(true), 200);
   }, [button]);
+
   useEffect(() => {
     !button2 && setTimeout(() => setButton2(true), 200);
   }, [button2]);
+
   useEffect(() => {
     !button3 && setTimeout(() => setButton3(true), 200);
   }, [button3]);
+
   useEffect(() => {
     !button4 && setTimeout(() => setButton4(true), 200);
   }, [button4]);
+
   useEffect(() => {
     !comments && setTimeout(() => setComments(true), 200);
   }, [comments]);
 
+  //allows user to use arrows to navigate webpage
+  const handleUserKeyPress = ({ key }) => {
+    key === "ArrowUp" && setButton2(false);
+    key === "ArrowDown" && setButton(false);
+    key === "ArrowLeft" && setButton3(false);
+    key === "ArrowRight" && setButton4(false);
+  };
+  useEffect(() => {
+    window.addEventListener("keydown", handleUserKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleUserKeyPress);
+    };
+  }, []);
+
+  //get video
+  // useEffect(() => {
+  //   axios({
+  //     method: "GET",
+  //     url: "http://localhost:5000/api/getvideo",
+  //   })
+  //     .then((res) => {
+  //       const arr = [];
+  //       for (let i = 0; i < res.data.length; i++) {
+  //         arr.push(res.data[i].url);
+  //       }
+  //       const randomVideo = arr.splice(
+  //         arr[Math.floor(Math.random() * arr.length)],
+  //         1
+  //       );
+  //       setVid(randomVideo);
+  //       arr.splice(randomVideo, 1);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  // get users specific videos //
   useEffect(() => {
     axios({
       method: "GET",
       url: "http://localhost:5000/api/getvideo",
     })
-      .then((res) => setVid(res.data.url))
+      .then((res) => console.log(res))
       .catch((err) => console.log(err));
-  }, []);
+  });
 
-  //post video
+  //add video info to database
   const handleSubmit1 = (e) => {
     e.preventDefault();
     axios({
@@ -58,12 +105,16 @@ function Videos() {
         name: name,
       },
     })
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        console.log(res.data);
+      })
       .catch((err) => console.log(err));
   };
 
   const videoSrc = Logo;
   let navigate = useNavigate();
+
+  const buttonClick = () => {};
 
   return (
     <>
@@ -190,7 +241,13 @@ function Videos() {
         )}
         {/* comments */}
         {comments ? (
-          <div className="comments" onClick={() => setComments(!comments)}>
+          <div
+            className="comments"
+            onClick={() => {
+              setComments(!comments);
+              setOpenComments(!openComments);
+            }}
+          >
             comments
           </div>
         ) : (
@@ -198,6 +255,7 @@ function Videos() {
             comments
           </div>
         )}
+        {openComments && <div className="comments-box"></div>}
       </div>
     </>
   );

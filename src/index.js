@@ -2,9 +2,37 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 
+//added recoil
+import { RecoilRoot } from "recoil";
+
 ReactDOM.render(
+  //added recoil (holds all other attributes/components)
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+//recoil takes 4 steps
+
+//step 1. npm i recoil
+
+//step 2. wrap the index.js <App /> element in the recoil element
+// import { RecoilRoot } from "recoil";
+// <RecoilRoot>
+// <App />
+// </RecoilRoot>
+
+//step 3. create a folder & file which will grab the values
+// import { atom } from "recoil";
+// export const usernameAtom = atom({
+//   key: "username",                                               //this is like the variable name
+//   default: "",                                                   //this is the default value
+// });
+
+//step 4. import those values
+// import { usernameAtom } from "../atoms/global";
+// import { useRecoilState } from "recoil";
+// const [username, setUsername] = useRecoilState(usernameAtom);    //basically the same as useState
