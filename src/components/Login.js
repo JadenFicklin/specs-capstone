@@ -22,6 +22,7 @@ function Login() {
 
   let navigate = useNavigate();
 
+  //1
   //set isloggedin on backend equal to true
   if (isLoggedIn === true) {
     axios({
@@ -32,15 +33,16 @@ function Login() {
       },
     })
       .then((res) => {
-        console.log("res", res);
+        console.log("logged in");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("error"));
   }
 
   useEffect(() => {
     isLoggedIn && navigate("/videos");
   }, [isLoggedIn]);
 
+  //sends username and password to database
   const handleSubmit = (e) => {
     e.preventDefault();
     axios({
@@ -52,7 +54,7 @@ function Login() {
       },
     })
       .then((res) => setIsLoggedIn(res.data))
-      .catch((err) => console.log(err + "this is the error"));
+      .catch((err) => console.log("error"));
   };
 
   return (

@@ -15,7 +15,7 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-//recoil takes 4 steps
+//recoil takes 5 steps
 
 //step 1. npm i recoil
 
@@ -32,7 +32,12 @@ ReactDOM.render(
 //   default: "",                                                   //this is the default value
 // });
 
-//step 4. import those values
+//step 4. export those values from the source file
 // import { usernameAtom } from "../atoms/global";
 // import { useRecoilState } from "recoil";
 // const [username, setUsername] = useRecoilState(usernameAtom);    //basically the same as useState
+
+//step 5. import those values into needed file
+// import { usernameAtom } from "../atoms/global";
+// import { useRecoilState } from "recoil";
+// const [username, setUsername] = useRecoilState(usernameAtom);

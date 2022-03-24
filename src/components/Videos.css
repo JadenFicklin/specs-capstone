@@ -296,3 +296,6 @@
   transition: 0.1s;
   right: 300px;
 }
+.logged-in-as {
+  font-size: 25px;
+}

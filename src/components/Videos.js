@@ -4,6 +4,9 @@ import ReactPlayer from "react-player";
 import Logo from "../pictures/S.mp4";
 import "./Videos.css";
 import axios from "axios";
+import { usernameAtom } from "../atoms/global";
+import { pastVideosAtom } from "../atoms/global";
+import { useRecoilState } from "recoil";
 
 function Videos() {
   //button press animation effect
@@ -23,6 +26,11 @@ function Videos() {
   const [name, setName] = useState("");
 
   const [vid, setVid] = useState("");
+
+  //added from recoil
+  const [username, setUsername] = useRecoilState(usernameAtom);
+  const [arrayOfPastVideos, setArrayOfPastVideos] =
+    useRecoilState(pastVideosAtom);
 
   //timer for button animations
   useEffect(() => {
@@ -62,38 +70,7 @@ function Videos() {
       window.removeEventListener("keydown", handleUserKeyPress);
     };
   }, []);
-
-  //get video
-  // useEffect(() => {
-  //   axios({
-  //     method: "GET",
-  //     url: "http://localhost:5000/api/getvideo",
-  //   })
-  //     .then((res) => {
-  //       const arr = [];
-  //       for (let i = 0; i < res.data.length; i++) {
-  //         arr.push(res.data[i].url);
-  //       }
-  //       const randomVideo = arr.splice(
-  //         arr[Math.floor(Math.random() * arr.length)],
-  //         1
-  //       );
-  //       setVid(randomVideo);
-  //       arr.splice(randomVideo, 1);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-  // get users specific videos //
-  useEffect(() => {
-    axios({
-      method: "GET",
-      url: "http://localhost:5000/api/getvideo",
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  });
-
+  /////////////////////////////
   //add video info to database
   const handleSubmit1 = (e) => {
     e.preventDefault();
@@ -105,16 +82,84 @@ function Videos() {
         name: name,
       },
     })
+      .then(() => {
+        console.log("video uploaded");
+      })
+      .catch((err) => console.log(err));
+  };
+  //
+  //
+  //
+  //
+
+  //2
+  //display & hold 1 random video
+  useEffect(() => {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/getvideo",
+      data: {
+        username: username,
+      },
+    })
+      .then((res) => handleGetVideo(res.data))
+      .catch((err) => console.log(err));
+  }, []);
+  const handleGetVideo = (param) => {
+    const splitString = param.split(","); //split string
+    const randomElement =
+      splitString[Math.floor(Math.random() * splitString.length)]; //random url
+    setVid(randomElement); //set vid to url
+    setArrayOfPastVideos(...arrayOfPastVideos, randomElement); //capture values
+  };
+
+  //next video
+  const nextVideo = () => {
+    //3
+    //delete all videos from users database
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/deletevideo",
+      data: {
+        username: username,
+      },
+    })
       .then((res) => {
-        console.log(res.data);
+        console.log("next video");
+      })
+      .catch((err) => console.log(err));
+
+    //get all videos
+    axios({
+      method: "GET",
+      url: "http://localhost:5000/api/getallvids",
+    })
+      .then((res) => {
+        //take the array of 4 objects and return an array with 4 strings
+        let myurls = [];
+        for (let i = 0; i < res.data.length; i++) {
+          myurls.push(res.data[i].url);
+        }
+        //splices out past videos from all videos,, stores new array into myurls
+        myurls = myurls.filter((val) => !arrayOfPastVideos.includes(val));
+        const joined = myurls.join(",");
+
+        axios({
+          method: "POST",
+          url: "http://localhost:5000/api/sendnewurls",
+          data: {
+            username: username,
+            joined: joined,
+          },
+        })
+          .then((res) => console.log("added new urls"))
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
 
   const videoSrc = Logo;
   let navigate = useNavigate();
-
-  const buttonClick = () => {};
 
   return (
     <>
@@ -140,7 +185,8 @@ function Videos() {
           className="videos-website-name"
           onClick={() => navigate("/videos")}
         >
-          SOPI.COM
+          SOPI.COM{" "}
+          <span className="logged-in-as">--- Logged in as {username}</span>
         </div>
         <div
           className="videos-top-videos"
@@ -228,7 +274,13 @@ function Videos() {
         )}
         {/* button4 */}
         {button4 ? (
-          <div className="videos-right" onClick={() => setButton4(!button4)}>
+          <div
+            className="videos-right"
+            onClick={() => {
+              setButton4(!button4);
+              nextVideo();
+            }}
+          >
             <div className="arrow4"></div>
           </div>
         ) : (

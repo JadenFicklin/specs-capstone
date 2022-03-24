@@ -8,7 +8,10 @@ import { useRecoilState } from "recoil";
 
 function Success() {
   let navigate = useNavigate();
+
+  //added from recoil
   const [username, setUsername] = useRecoilState(usernameAtom);
+  console.log(username);
 
   return (
     <div>
