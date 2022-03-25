@@ -5,8 +5,8 @@ import Logo from "../pictures/S.mp4";
 import "./Videos.css";
 import axios from "axios";
 import { usernameAtom } from "../atoms/global";
+import { pastVideosAtom } from "../atoms/global";
 import { useRecoilState } from "recoil";
-import useSelectVideo from "./useSelectVideo";
 
 function Videos() {
   //button press animation effect
@@ -17,21 +17,15 @@ function Videos() {
   const [button4, setButton4] = useState(true);
   const [comments, setComments] = useState(true);
 
-  //open the upload video box / comments box / stats box
+  //open the upload video box / comments box
   const [upload, setUpload] = useState(false);
   const [openComments, setOpenComments] = useState(false);
-  const [openStats, setOpenStats] = useState(false);
-  const [statsName, setStatsName] = useState("");
-  const [statsVotes, setStatsVotes] = useState("");
 
   //upload url and name to database
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
 
   const [vid, setVid] = useState("");
-  const [selectedVideo, setSelectedVideo] = useState("");
-
-  const selectVideo = useSelectVideo();
 
   //added from recoil
   const [username, setUsername] = useRecoilState(usernameAtom);
@@ -120,80 +114,54 @@ function Videos() {
       .catch((err) => console.log(err));
   }, []);
 
-  const getAllVideos = async () => {
-    const { data: allVideosResponse } = await axios.get(
-      "http://localhost:5000/api/getnewvid"
-    );
-    const allVideos = allVideosResponse.map((video) => video.url);
-    return allVideos;
-  };
-
-  const getWatchedVideos = async (allVideos) => {
-    const { data: watchedVideosResponse } = await axios.post(
-      "http://localhost:5000/api/getwatched",
-      {
-        username,
-      }
-    );
-
-    const watchedVideos = JSON.parse(watchedVideosResponse?.[0]?.watched);
-    return watchedVideos;
-  };
-
-  const determineVideo = async () => {
-    const allVideos = await getAllVideos();
-    const watchedVideos = await getWatchedVideos();
-    selectVideo(allVideos, watchedVideos, setSelectedVideo);
-  };
-
-  useEffect(() => {
-    determineVideo();
-  }, []);
-
-  useEffect(() => {
-    if (selectedVideo === null) {
-      alert("congrats! You have watched all the videos!");
-    }
-  }, [selectedVideo]);
-
   //get a video that isnt in the watched list, setvid, send new url to watched list
-  const nextVideo = () => {};
+  const nextVideo = () => {
+    //6
+    //get a random video from database
+    axios({
+      method: "GET",
+      url: "http://localhost:5000/api/getnewvid",
+    })
+      .then((res) => {
+        const randomurl =
+          res.data[Math.floor(Math.random() * res.data.length)].url;
+        //7
+        //pull the watched videos so i can compare the 2 arrays
+        axios({
+          method: "POST",
+          url: "http://localhost:5000/api/getwatched",
+          data: {
+            username: username,
+          },
+        })
+          .then((res) => {
+            console.log(randomurl); // this is new video -- good
 
-  //8
-  //downvotes
-  const handleDownvoteVideo = () => {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/downvotevideo",
-      data: {
-        url: "https://www.youtube.com/watch?v=XQun9rDmvms",
-      },
-    }).then((res) => console.log(res));
-  };
-  //9
-  //upvotes
-  const handleUpvoteVideo = () => {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/upvotevideo",
-      data: {
-        url: "https://www.youtube.com/watch?v=XQun9rDmvms",
-      },
-    }).then((res) => console.log(res));
-  };
-  //10
-  //display name and votes in stats box
-  const handleGetStats = () => {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/getstats",
-      data: {
-        url: selectedVideo || "https://www.youtube.com/watch?v=XQun9rDmvms",
-      },
-    }).then((res) => {
-      setStatsName(res.data[0].name);
-      setStatsVotes(res.data[0].votes);
-    });
+            const splitResData = res.data[0].watched.split(","); //split string to individual values in array
+            const uniq = [...new Set(splitResData)]; //remove duplicates
+            console.log(uniq);
+
+            const currentVideo = randomurl;
+            const watchedVideos = uniq;
+
+            const found = watchedVideos.find(
+              (element) => element === currentVideo
+            );
+
+            if (found) {
+              console.log("you have already watched this video");
+              // make a new random number and try again
+              nextVideo();
+            } else {
+              console.log("you have NOT watched this video yet");
+              // add the current number to the watched videos
+              // update the watched videos in the database for the user
+              setVid(randomurl);
+            }
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const videoSrc = Logo;
@@ -253,7 +221,7 @@ function Videos() {
 
         <div className="video">
           <ReactPlayer
-            url={selectedVideo || vid}
+            url={vid}
             playing={true}
             controls
             width={"1680px"}
@@ -263,14 +231,7 @@ function Videos() {
 
         {/* stats */}
         {stats ? (
-          <div
-            className="stats"
-            onClick={() => {
-              setStats(!stats);
-              setOpenStats(!openStats);
-              handleGetStats();
-            }}
-          >
+          <div className="stats" onClick={() => setStats(!stats)}>
             stats
           </div>
         ) : (
@@ -280,13 +241,7 @@ function Videos() {
         )}
         {/* button */}
         {button ? (
-          <div
-            className="videos-downvote"
-            onClick={() => {
-              setButton(!button);
-              handleDownvoteVideo();
-            }}
-          >
+          <div className="videos-downvote" onClick={() => setButton(!button)}>
             <div className="arrow1"></div>
           </div>
         ) : (
@@ -299,13 +254,7 @@ function Videos() {
         )}
         {/* button2 */}
         {button2 ? (
-          <div
-            className="videos-upvote"
-            onClick={() => {
-              setButton2(!button2);
-              handleUpvoteVideo();
-            }}
-          >
+          <div className="videos-upvote" onClick={() => setButton2(!button2)}>
             <div className="arrow2"></div>
           </div>
         ) : (
@@ -365,12 +314,6 @@ function Videos() {
           </div>
         )}
         {openComments && <div className="comments-box"></div>}
-        {openStats && (
-          <div className="stats-box">
-            <div className="stats-name">name: {statsName}</div>
-            <div className="stats-votes">votes: {statsVotes}</div>
-          </div>
-        )}
       </div>
     </>
   );

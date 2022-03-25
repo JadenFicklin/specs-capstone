@@ -287,15 +287,37 @@
 }
 .comments-box {
   position: absolute;
-  right: 0px;
-  top: 0px;
+  left: 1285px;
+  bottom: 156px;
+  width: 600px;
+  height: 730px;
   background-color: white;
   color: #200b00;
-  opacity: 40%;
+  border: 5px solid #200b00;
+  border-radius: 30px;
   font-size: 29px;
   transition: 0.1s;
-  right: 300px;
 }
 .logged-in-as {
   font-size: 25px;
+}
+.stats-box {
+  position: absolute;
+  left: 115px;
+  bottom: 156px;
+  width: 400px;
+  height: 100px;
+  background-color: white;
+  color: #200b00;
+  border: 5px solid #200b00;
+  border-radius: 30px;
+  font-size: 29px;
+  transition: 0.1s;
+}
+.stats-name {
+  margin-top: 15px;
+  margin-left: 15px;
+}
+.stats-votes {
+  margin-left: 15px;
 }

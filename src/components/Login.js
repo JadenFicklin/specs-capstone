@@ -22,27 +22,12 @@ function Login() {
 
   let navigate = useNavigate();
 
-  //1
-  //set isloggedin on backend equal to true
-  if (isLoggedIn === true) {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/isloggedin",
-      data: {
-        username: username,
-      },
-    })
-      .then((res) => {
-        console.log("logged in");
-      })
-      .catch((err) => console.log("error"));
-  }
-
   useEffect(() => {
     isLoggedIn && navigate("/videos");
   }, [isLoggedIn]);
 
-  //sends username and password to database
+  //2
+  //log in
   const handleSubmit = (e) => {
     e.preventDefault();
     axios({

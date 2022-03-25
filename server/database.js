@@ -6,6 +6,7 @@ const Sequelize = require("sequelize");
 const { matchPath } = require("react-router-dom");
 const { default: axios } = require("axios");
 const { query } = require("express");
+const _ = require("lodash");
 
 const app = express();
 
@@ -23,8 +24,8 @@ const sequelize = new Sequelize(DATABASE_URL, {
 
 //endpoints
 
+//1
 //register
-//this will insert the users info into the users database (the first part of the conditional catchest if username already exists)
 app.post("/api/register", async (req, res) => {
   const { username, firstname, lastname, password } = req.body;
 
@@ -37,12 +38,13 @@ app.post("/api/register", async (req, res) => {
   } else {
     return sequelize
       .query(
-        `INSERT INTO users (username, firstname, lastname, password) VALUES ('${username}', '${firstname}', '${lastname}', '${password}')`
+        `INSERT INTO users (username, firstname, lastname, password, watched ) VALUES ('${username}', '${firstname}', '${lastname}', '${password}', ARRAY[''])`
       )
       .then((result) => res.send(true).status(200));
   }
 });
 
+//2
 //login
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
@@ -57,7 +59,8 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-//upload video info to database video table
+//3
+//add video to database
 app.post("/api/uploadvideo", async (req, res) => {
   const { url, name } = req.body;
 
@@ -66,54 +69,99 @@ app.post("/api/uploadvideo", async (req, res) => {
     .then((result) => res.send(result).status(200));
 });
 
-//1
-// add urls on login
-app.post("/api/isloggedin", async (req, res) => {
-  const { username } = req.body;
-  const getallURLS = await sequelize.query(`SELECT url FROM videos`);
-  const urlArr = [];
-  for (let i = 0; i < getallURLS[0].length; i++) {
-    urlArr.push(getallURLS[0][i].url);
-  }
-  return sequelize
-    .query(
-      `UPDATE users
-    SET isloggedin=true, videourls='${urlArr}'
-    WHERE username='${username}'
-    `
-    )
-    .then((result) => res.send(result[0]).status(200));
-});
-
-//3
-// delete videos from users videourls database
-app.post("/api/deletevideo", async (req, res) => {
-  const { username } = req.body;
-  return sequelize
-    .query(`UPDATE users SET videourls = null WHERE username='${username}'`)
-    .then((result) => res.send(result[0]).status(200));
-});
-
-//get all vids
-app.get("/api/getallvids", async (req, res) => {
+//4
+//capture video data
+app.get("/api/capturevideos", async (req, res) => {
   return sequelize
     .query(`SELECT url FROM videos`)
     .then((result) => res.send(result[0]).status(200));
 });
 
-//add new vidurl string to users url value
-app.post("/api/sendnewurls", async (req, res) => {
-  const { username, joined } = req.body;
+//5
+//add to watched
+app.post("/api/addtowatched", async (req, res) => {
+  const { username, randomurl } = req.body;
+
+  const getPastWatched = await sequelize.query(
+    `SELECT watched FROM users WHERE username='${username}'`
+  );
+  const past = _.uniqBy(JSON.parse(getPastWatched[0][0].watched));
+  const updatedWatchList = [...past];
+
+  updatedWatchList.push(randomurl);
+  console.log(updatedWatchList);
+
   return sequelize
     .query(
       `UPDATE users
-  SET videourls='${joined}'
-  WHERE username='${username}'
-  `
+    SET watched= '${JSON.stringify(updatedWatchList)}'
+    WHERE username='${username}'`
     )
     .then((result) => res.send(result[0]).status(200));
 });
 
+//6
+// getnewvid
+app.get("/api/getnewvid", async (req, res) => {
+  return sequelize
+    .query(`SELECT url FROM videos`)
+    .then((result) => res.send(result[0]).status(200));
+});
+
+//7
+//pull the watched videos
+app.post("/api/getwatched", async (req, res) => {
+  const { username } = req.body;
+  return sequelize
+    .query(`SELECT watched FROM users WHERE username='${username}'`)
+    .then((result) => res.send(result[0]).status(200));
+});
+
+//8
+//video downvotes
+app.post("/api/downvotevideo", async (req, res) => {
+  const { url } = req.body;
+
+  const grabVideosVotesNumber = await sequelize.query(
+    //grab votes number
+    `SELECT votes FROM videos WHERE url = '${url}'`
+  );
+  return sequelize // set votes = votes - 1
+    .query(
+      `UPDATE videos
+  SET votes = ${grabVideosVotesNumber[0][0].votes - 1} 
+  WHERE url='${url}'`
+    )
+    .then((result) => res.send(result[0]).status(200));
+});
+//9
+//video upvotes
+app.post("/api/upvotevideo", async (req, res) => {
+  const { url } = req.body;
+
+  const grabVideosVotesNumber = await sequelize.query(
+    //grab votes number
+    `SELECT votes FROM videos WHERE url = '${url}'`
+  );
+  return sequelize // set votes = votes - 1
+    .query(
+      `UPDATE videos
+  SET votes = ${grabVideosVotesNumber[0][0].votes + 1} 
+  WHERE url='${url}'`
+    )
+    .then((result) => res.send(result[0]).status(200));
+});
+//10
+app.post("/api/getstats", async (req, res) => {
+  const { url } = req.body;
+
+  return sequelize
+    .query(`SELECT * FROM videos WHERE url = '${url}'`)
+    .then((result) => res.send(result[0]).status(200));
+});
+
+//#
+//app listen
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
 });

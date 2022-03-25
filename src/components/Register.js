@@ -16,6 +16,8 @@ function Register() {
     accountCreated && navigate("/success");
   }, [accountCreated]);
 
+  //1
+  //send user info to database
   const handleSubmit = (e) => {
     e.preventDefault();
     axios({
@@ -30,10 +32,6 @@ function Register() {
     })
       .then((res) => setAccountCreated(res.data))
       .catch((err) => console.log(err + "this is the error"));
-    setUsername("");
-    setFirstName("");
-    setLastName("");
-    setPassword("");
   };
 
   return (
