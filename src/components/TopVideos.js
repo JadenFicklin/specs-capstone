@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TopVideos.css";
 import Logo from "../pictures/S.mp4";
 import ReactPlayer from "react-player";
+import axios from "axios";
 
 function TopVideos() {
   const [upload, setUpload] = useState(false);
+
+  //7
+  //get all videos
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/topvideos").then((res) => {
+      console.log(res.data[0].video_id);
+    });
+  });
+  //need videos url, name, votes and user that posted it
 
   let navigate = useNavigate();
   const videoSrc = Logo;
@@ -59,14 +69,3 @@ function TopVideos() {
 }
 
 export default TopVideos;
-
-//   return (
-//     <div>
-//       <h1>Account created!</h1>
-//       <button
-// onClick={() => {
-//   navigate("/videos");
-//         }}
-//       >
-//         go to videos page
-//       </button>

@@ -321,3 +321,29 @@
 .stats-votes {
   margin-left: 15px;
 }
+.comments-input {
+  font-size: 29px;
+  border: 5px solid rgb(26, 9, 0);
+  border-radius: 25px;
+  padding-left: 10px;
+  padding-right: 160px;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
+.comments-submit {
+  cursor: pointer;
+  background-color: rgb(26, 9, 0);
+  color: white;
+  font-size: 29px;
+  border-radius: 25px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  height: 47px;
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+}

@@ -7,6 +7,7 @@ import "./RegisterLogin.css";
 
 // recoil values
 import { usernameAtom } from "../atoms/global";
+import { isLoggedInAtom } from "../atoms/global";
 import { useRecoilState } from "recoil";
 
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,7 @@ function Login() {
   const [username, setUsername] = useRecoilState(usernameAtom);
 
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
 
   let navigate = useNavigate();
 
@@ -37,10 +38,19 @@ function Login() {
         username: username,
         password: password,
       },
-    })
-      .then((res) => setIsLoggedIn(res.data))
-      .catch((err) => console.log("error"));
+    }).then((res) => setIsLoggedIn(res.data));
   };
+
+  //a
+  if (isLoggedIn === true) {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/getvideos",
+      data: {
+        username: username,
+      },
+    }).then((res) => console.log(res));
+  }
 
   return (
     <>
