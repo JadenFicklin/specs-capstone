@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { usernameAtom } from "../atoms/global";
+import { useRecoilState } from "recoil";
 
 import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useRecoilState(usernameAtom);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
@@ -44,28 +46,24 @@ function Register() {
             className="register-username"
             type="text"
             placeholder="username"
-            value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className="register-firstname"
             type="text"
             placeholder="first name"
-            value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
           <input
             className="register-lastname"
             type="text"
             placeholder="last name"
-            value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
           <input
             className="register-password"
             type="password"
             placeholder="password"
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="register-submit">Submit</button>
