@@ -147,6 +147,7 @@ function Videos() {
       data: {
         url: url,
         name: name,
+        username: username,
       },
     })
       .then(() => {

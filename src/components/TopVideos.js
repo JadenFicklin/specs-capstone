@@ -4,17 +4,49 @@ import "./TopVideos.css";
 import Logo from "../pictures/S.mp4";
 import ReactPlayer from "react-player";
 import axios from "axios";
+import Component from "./Component";
 
 function TopVideos() {
   const [upload, setUpload] = useState(false);
-
+  const [data, setData] = useState("");
+  const [vurls, setVurls] = useState([]);
+  const [vnames, setVnames] = useState([]);
+  const [vvotes, setVvotes] = useState([]);
+  const [vusernames, setVusernames] = useState([]);
   //7
   //get all videos
   useEffect(() => {
     axios.get("http://localhost:5000/api/topvideos").then((res) => {
-      console.log(res.data[0].video_id);
+      const sortData = res.data.sort(
+        (a, b) => parseFloat(b.votes) - parseFloat(a.votes)
+      );
+
+      const urls = [];
+      for (let i = 0; i < sortData.length; i++) {
+        urls.push(sortData[i].url);
+      }
+      const names = [];
+      for (let a = 0; a < sortData.length; a++) {
+        names.push(sortData[a].name);
+      }
+      const votes = [];
+      for (let b = 0; b < sortData.length; b++) {
+        votes.push(sortData[b].votes);
+      }
+      const usernames = [];
+      for (let c = 0; c < sortData.length; c++) {
+        usernames.push(sortData[c].username);
+      }
+
+      setVurls(urls);
+      setVnames(names);
+      setVvotes(votes);
+      setVusernames(usernames);
+
+      setData(sortData);
     });
-  });
+  }, []);
+
   //need videos url, name, votes and user that posted it
 
   let navigate = useNavigate();
@@ -56,12 +88,22 @@ function TopVideos() {
         </div>
         <div className="top-blue-background">
           <div className="top-three">
-            <div className="top-firstvid">
-              <div className="top-picture"></div>
-              <div className="top-name">Adventure time!</div>
+            <div className="inner-top-three">
+              {/* <div className="number-one">1</div> */}
+              {/* <div className="number-two">2</div> */}
+              {/* <div className="number-three">3</div> */}
+              {/* {data.map((object, index) => {
+                return (
+                  <Component
+                    objectUrl={object.url}
+                    name={object.name}
+                    votes={object.votes}
+                    username={object.username}
+                  />
+                );
+              })} */}
             </div>
           </div>
-          <div className="top-other-vids"></div>
         </div>
       </div>
     </>

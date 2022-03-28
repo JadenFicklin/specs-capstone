@@ -65,33 +65,37 @@ app.post("/api/getvideos", async (req, res) => {
 app.post("/api/displayvideo", async (req, res) => {
   const { username } = req.body;
 
-  const geturls = await sequelize.query(
-    `SELECT vids FROM users WHERE username='${username}'`
-  );
-  const getString = geturls[0][0].vids;
-  const setBackToArray = await getString.split(",");
+  const geturls = await sequelize
+    .query(`SELECT * FROM users WHERE username='jado'`)
+    .then((dbresponse) => {
+      console.log(dbresponse);
+    });
+  // const getString = geturls[0][0].vids;
+  // const setBackToArray = getString.split(",");
 
-  const updateArray = [];
-  const undifinedArray = [];
-  for (let i = 0; i < setBackToArray.length; i++) {
-    if (setBackToArray[i] === "undefined") {
-      undifinedArray.push(setBackToArray[i]);
-    } else {
-      updateArray.push(setBackToArray[i]);
-    }
-  }
-  const randomVid = updateArray[Math.floor(Math.random() * updateArray.length)];
+  // const updateArray = [];
+  // const undifinedArray = [];
+  // for (let i = 0; i < setBackToArray.length; i++) {
+  //   if (setBackToArray[i] === "undefined") {
+  //     undifinedArray.push(setBackToArray[i]);
+  //   } else {
+  //     updateArray.push(setBackToArray[i]);
+  //   }
+  // }
+  // const randomVid = updateArray[Math.floor(Math.random() * updateArray.length)];
 
-  return res.send(randomVid).status(200);
+  // return res.send(randomVid).status(200);
 });
 //c
 //delete vid from user database
 app.post("/api/deletevideo", async (req, res) => {
   const { username, vid } = req.body;
-  const geturls = await sequelize.query(
-    `SELECT vids FROM users WHERE username='${username}'`
-  );
-  const setBackToArray = geturls[0][0].vids.split(",");
+  await sequelize
+    .query(`SELECT vids FROM users WHERE username='${username}'`)
+    .then((dbresponse) => {
+      console.log(dbresponse);
+    });
+  // const setBackToArray = geturls[0][0].vids.split(",");
   const updateArray = [];
   const undifinedArray = [];
   for (let i = 0; i < setBackToArray.length; i++) {
@@ -191,10 +195,12 @@ app.post("/api/login", async (req, res) => {
 //3
 //add video to database
 app.post("/api/uploadvideo", async (req, res) => {
-  const { url, name } = req.body;
+  const { url, name, username } = req.body;
 
   return sequelize
-    .query(`INSERT INTO videos (url, name) VALUES ('${url}', '${name}')`)
+    .query(
+      `INSERT INTO videos (url, name, votes ,username) VALUES ('${url}', '${name}', 0 ,'${username}')`
+    )
     .then((result) => res.send(result).status(200));
 });
 
