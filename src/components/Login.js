@@ -26,7 +26,7 @@ function Login() {
   useEffect(() => {
     isLoggedIn && navigate("/videos");
   }, [isLoggedIn]);
-
+  //check if username and password match, then add videos as a string to user
   //2
   //log in
   const handleSubmit = (e) => {
@@ -40,17 +40,6 @@ function Login() {
       },
     }).then((res) => setIsLoggedIn(res.data));
   };
-
-  //a
-  if (isLoggedIn === true) {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/getvideos",
-      data: {
-        username: username,
-      },
-    }).then((res) => console.log(res));
-  }
 
   return (
     <>

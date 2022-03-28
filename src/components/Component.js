@@ -11,8 +11,8 @@ function Component(props) {
               `${props.objectUrl}` ||
               "https://www.youtube.com/watch?v=fe2KntKItaU"
             }
-            // controls={false}
-            muted
+            light={true}
+            // muted
             width={"280px"}
             height={"180px"}
           />
