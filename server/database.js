@@ -104,39 +104,45 @@ app.post("/api/deletevideo", async (req, res) => {
   const geturls = await sequelize.query(
     `SELECT vids FROM users WHERE username='${username}'`
   );
-  const setBackToArray = geturls?.[0]?.[0]?.vids.split(",");
-  const updateArray = [];
-  const undifinedArray = [];
-  for (let i = 0; i < setBackToArray.length; i++) {
-    if (setBackToArray[i] === "undefined") {
-      undifinedArray.push(setBackToArray[i]);
-    } else {
-      updateArray.push(setBackToArray[i]);
-    }
-  }
-  const newArray = [];
-  const oldArray = [];
-  for (let i = 0; i < updateArray.length; i++) {
-    if (updateArray[i] === vid) {
-      oldArray.push(updateArray[i]);
-    } else {
-      newArray.push(updateArray[i]);
-    }
-  }
-  const getWatched = await sequelize.query(
-    `SELECT watched FROM users WHERE username='${username}'`
-  );
-  const previouslyWatched = getWatched[0][0].watched;
 
-  const setUserVidsToNewString = sequelize.query(
-    `UPDATE users SET vids='${newArray}' WHERE username = '${username}'`
-  );
-  const setUserWatchedToNewString = sequelize.query(
-    `UPDATE users SET watched='${
-      oldArray + "," + previouslyWatched
-    }' WHERE username = '${username}'`
-  );
+  const urls = geturls?.[0]?.[0]?.vids;
+
+  if (urls) {
+    const setBackToArray = urls?.split(",");
+    const updateArray = [];
+    const undifinedArray = [];
+    for (let i = 0; i < setBackToArray.length; i++) {
+      if (setBackToArray[i] === "undefined") {
+        undifinedArray.push(setBackToArray[i]);
+      } else {
+        updateArray.push(setBackToArray[i]);
+      }
+    }
+    const newArray = [];
+    const oldArray = [];
+    for (let i = 0; i < updateArray.length; i++) {
+      if (updateArray[i] === vid) {
+        oldArray.push(updateArray[i]);
+      } else {
+        newArray.push(updateArray[i]);
+      }
+    }
+    const getWatched = await sequelize.query(
+      `SELECT watched FROM users WHERE username='${username}'`
+    );
+    const previouslyWatched = getWatched[0][0].watched;
+
+    const setUserVidsToNewString = sequelize.query(
+      `UPDATE users SET vids='${newArray}' WHERE username = '${username}'`
+    );
+    const setUserWatchedToNewString = sequelize.query(
+      `UPDATE users SET watched='${
+        oldArray + "," + previouslyWatched
+      }' WHERE username = '${username}'`
+    );
+  }
 });
+
 //d
 //grab new random vid and setVid to it
 app.post("/api/getnewrandomvideo", async (req, res) => {
@@ -145,11 +151,16 @@ app.post("/api/getnewrandomvideo", async (req, res) => {
   const getvids = await sequelize.query(
     `SELECT vids FROM users WHERE username='${username}'`
   );
-  const holdVids = getvids[0][0].vids;
-  const splitVids = holdVids.split(",");
-  const randomVid = splitVids[Math.floor(Math.random() * splitVids.length)];
-  console.log(randomVid);
-  return res.send(randomVid).status(200);
+  const holdVids = getvids?.[0]?.[0]?.vids;
+
+  if (holdVids) {
+    const splitVids = holdVids.split(",");
+    const randomVid = splitVids[Math.floor(Math.random() * splitVids.length)];
+    console.log(randomVid);
+    return res.send(randomVid).status(200);
+  } else {
+    return res.send([]).status(200);
+  }
 });
 //e
 //previousvid
@@ -159,23 +170,28 @@ app.post("/api/previousvid", async (req, res) => {
   const geturl = await sequelize.query(
     `SELECT watched FROM users WHERE username='${username}'`
   );
-  const getString = geturl[0][0].watched;
-  const getArray = getString.split(",");
-  const notWanted = [];
-  const urls = [];
-  for (let i = 0; i < getArray.length; i++) {
-    if (getArray[i].includes("http")) {
-      urls.unshift(getArray[i]);
-    } else {
-      notWanted.push(getArray[i]);
+  const getString = geturl?.[0]?.[0]?.watched;
+
+  if (getString) {
+    const getArray = getString.split(",");
+    const notWanted = [];
+    const urls = [];
+    for (let i = 0; i < getArray.length; i++) {
+      if (getArray[i].includes("http")) {
+        urls.unshift(getArray[i]);
+      } else {
+        notWanted.push(getArray[i]);
+      }
     }
+    const toString = urls.join(",");
+    const mostRecentVideo = urls[0];
+    const updatedWatched = sequelize.query(
+      `UPDATE users SET watched='${toString}' WHERE username = '${username}'`
+    );
+    return res.send(mostRecentVideo).status(200);
+  } else {
+    return res.send([]).status(200);
   }
-  const toString = urls.join(",");
-  const mostRecentVideo = urls[0];
-  const updatedWatched = sequelize.query(
-    `UPDATE users SET watched='${toString}' WHERE username = '${username}'`
-  );
-  return res.send(mostRecentVideo).status(200);
 });
 //f
 //removevidinfo
@@ -249,16 +265,59 @@ app.get("/api/topvideos", async (req, res) => {
     .then((result) => res.send(result[0]).status(200));
 });
 
-//add comments
-app.post("/api/makecomment", async (req, res) => {
-  const { username, vid, comment } = req.body;
+//add comment
+app.post("/api/addcomment", async (req, res) => {
+  const { vid, username, comment } = req.body;
 
   return sequelize
     .query(
-      `INSERT INTO comments (comment, votes, video_id, username_id) VALUES ('${comment}', 0 ,'${vid}', '${username}')`
+      `INSERT INTO comments (comment, votes, video_id, username_id) VALUES ('${comment}',0,'${vid}','${username}')`
     )
-    .then((result) => res.send(result[0]).status(200))
-    .catch((err) => console.log(err));
+    .then((result) => res.send(result[0]).status(200));
+});
+
+//display comments
+app.post("/api/displaycomments", async (req, res) => {
+  const { vid } = req.body;
+  return await sequelize
+    .query(
+      `SELECT comment, username_id, votes FROM comments WHERE video_id='${vid}'`
+    )
+    .then((result) => res.send(result[0]).status(200));
+});
+
+//upvote click comments
+app.post("/api/upvoteclick", async (req, res) => {
+  const { comment } = req.body;
+
+  const grabVotes = await sequelize.query(
+    `SELECT votes FROM comments WHERE comment='${comment}'`
+  );
+
+  return await sequelize
+    .query(
+      `UPDATE comments SET votes=${
+        grabVotes[0][0].votes + 1
+      } WHERE comment='${comment}'`
+    )
+    .then((result) => res.send(result[0]).status(200));
+});
+
+//downvote click comments
+app.post("/api/downvoteclick", async (req, res) => {
+  const { comment } = req.body;
+
+  const grabVotes = await sequelize.query(
+    `SELECT votes FROM comments WHERE comment='${comment}'`
+  );
+
+  return await sequelize
+    .query(
+      `UPDATE comments SET votes=${
+        grabVotes[0][0].votes - 1
+      } WHERE comment='${comment}'`
+    )
+    .then((result) => res.send(result[0]).status(200));
 });
 
 //#

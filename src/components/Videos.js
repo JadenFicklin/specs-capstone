@@ -8,6 +8,7 @@ import { usernameAtom } from "../atoms/global";
 import { isLoggedInAtom } from "../atoms/global";
 import { vidAtom } from "../atoms/global";
 import { useRecoilState } from "recoil";
+import Component2 from "./Component2";
 
 function Videos() {
   //button press animation effect
@@ -39,6 +40,8 @@ function Videos() {
 
   //add comments
   const [userComment, setUserComment] = useState("");
+  const [holdComments, setHoldComments] = useState([]);
+  console.log(holdComments);
 
   //timer for button animations
   useEffect(() => {
@@ -195,19 +198,33 @@ function Videos() {
       setStatsVotes(res.data[0].votes || 0);
     });
   };
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const handleCommentSubmit = () => {
-    axios
-      .post({
-        method: "POST",
-        url: "http://localhost:5000/api/makecomment",
-        data: {
-          username: username,
-          vid: vid,
-          comment: userComment,
-        },
-      })
+  //add comment
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/addcomment",
+      data: {
+        vid: vid,
+        username: username,
+        comment: userComment,
+      },
+    })
       .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //display comments
+  const handleCommentsClick = () => {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/displaycomments",
+      data: {
+        vid: vid,
+      },
+    })
+      .then((res) => setHoldComments(res.data))
       .catch((err) => console.log(err));
   };
 
@@ -378,29 +395,54 @@ function Videos() {
             onClick={() => {
               setComments(!comments);
               setOpenComments(!openComments);
+              handleCommentsClick();
             }}
           >
             comments
           </div>
         ) : (
-          <div className="comments-after" onClick={() => setComments(!button)}>
+          <div
+            className="comments-after"
+            onClick={() => {
+              setComments(!button);
+            }}
+          >
             comments
           </div>
         )}
         {openComments && (
-          <form className="comments-box">
+          <form
+            className="comments-box"
+            onSubmit={(e) => handleCommentSubmit(e)}
+          >
+            {/* {data?.map((object, index) => {
+              return (
+                <Component2
+                  objectUrl={object.url}
+                  name={object.name}
+                  votes={object.votes}
+                  username={object.username}
+                />
+              );
+            })} */}
+            {/* {JSON.stringify(holdComments)} */}
+            {holdComments.map((object, index) => {
+              return (
+                <Component2
+                  comment={object.comment}
+                  username={object.username_id}
+                  votes={object.votes}
+                />
+              );
+            })}
+
             <input
               type="text"
               placeholder="add comment"
               className="comments-input"
               onChange={(e) => setUserComment(e.target.value)}
             />
-            <button
-              className="comments-submit"
-              onClick={() => handleCommentSubmit}
-            >
-              submit
-            </button>
+            <button className="comments-submit">submit</button>
           </form>
         )}
         {openStats && (

@@ -286,9 +286,9 @@
   left: 37px;
 }
 .comments-box {
-  position: absolute;
-  left: 1285px;
-  bottom: 156px;
+  position: relative;
+  right: -1259px;
+  bottom: -85px;
   width: 600px;
   height: 730px;
   background-color: white;
@@ -346,4 +346,35 @@
   position: absolute;
   bottom: 10px;
   right: 20px;
+}
+.comments-small-box {
+  font-size: 25px;
+  margin: 20px;
+}
+.commments-username {
+  margin-right: 10px;
+}
+.comments-votes {
+  position: absolute;
+  right: 70px;
+}
+.upvt,
+.dnvt {
+  cursor: pointer;
+  border: none;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  clip-path: polygon(50% 18%, 0% 100%, 100% 100%);
+  margin-top: -30px;
+}
+.upvt {
+  right: 100px;
+  background-color: green;
+}
+.dnvt {
+  background-color: red;
+  right: 30px;
+  transform: rotate(180deg);
+  margin-top: -27px;
 }
