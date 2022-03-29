@@ -104,7 +104,7 @@ app.post("/api/deletevideo", async (req, res) => {
   const geturls = await sequelize.query(
     `SELECT vids FROM users WHERE username='${username}'`
   );
-  const setBackToArray = geturls[0][0].vids.split(",");
+  const setBackToArray = geturls?.[0]?.[0]?.vids.split(",");
   const updateArray = [];
   const undifinedArray = [];
   for (let i = 0; i < setBackToArray.length; i++) {
@@ -247,6 +247,18 @@ app.get("/api/topvideos", async (req, res) => {
   return sequelize
     .query(`SELECT * FROM videos`)
     .then((result) => res.send(result[0]).status(200));
+});
+
+//add comments
+app.post("/api/makecomment", async (req, res) => {
+  const { username, vid, comment } = req.body;
+
+  return sequelize
+    .query(
+      `INSERT INTO comments (comment, votes, video_id, username_id) VALUES ('${comment}', 0 ,'${vid}', '${username}')`
+    )
+    .then((result) => res.send(result[0]).status(200))
+    .catch((err) => console.log(err));
 });
 
 //#

@@ -37,6 +37,9 @@ function Videos() {
   //a-z
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
 
+  //add comments
+  const [userComment, setUserComment] = useState("");
+
   //timer for button animations
   useEffect(() => {
     !stats && setTimeout(() => setStats(true), 200);
@@ -191,6 +194,21 @@ function Videos() {
       setStatsName(res.data[0].name);
       setStatsVotes(res.data[0].votes || 0);
     });
+  };
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const handleCommentSubmit = () => {
+    axios
+      .post({
+        method: "POST",
+        url: "http://localhost:5000/api/makecomment",
+        data: {
+          username: username,
+          vid: vid,
+          comment: userComment,
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const videoSrc = Logo;
@@ -375,8 +393,14 @@ function Videos() {
               type="text"
               placeholder="add comment"
               className="comments-input"
+              onChange={(e) => setUserComment(e.target.value)}
             />
-            <button className="comments-submit">submit</button>
+            <button
+              className="comments-submit"
+              onClick={() => handleCommentSubmit}
+            >
+              submit
+            </button>
           </form>
         )}
         {openStats && (
