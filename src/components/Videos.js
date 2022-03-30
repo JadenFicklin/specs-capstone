@@ -251,6 +251,7 @@ function Videos() {
         onClick={() => {
           navigate("/");
           setIsLoggedIn(false);
+
           // removeVidInfo();
         }}
       >

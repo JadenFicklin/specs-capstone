@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import axios from "axios";
 import Component from "./Component";
 import { useRecoilState } from "recoil";
+import { isLoggedInAtom } from "../atoms/global";
 import { usernameAtom } from "../atoms/global";
 
 function TopVideos() {
@@ -15,6 +16,7 @@ function TopVideos() {
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useRecoilState(usernameAtom);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
 
   //7
   //get all videos
@@ -99,7 +101,13 @@ function TopVideos() {
               <button className="videos-submit">SUBMIT</button>
             </form>
           )}
-          <div className="top-logout" onClick={() => navigate("/")}>
+          <div
+            className="top-logout"
+            onClick={() => {
+              navigate("/");
+              setIsLoggedIn(false);
+            }}
+          >
             log out
           </div>
         </div>
