@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { usernameAtom } from "../atoms/global";
+import { accountCreatedAtom } from "../atoms/global";
+import { isLoggedInAtom } from "../atoms/global";
 import { useRecoilState } from "recoil";
 
 import { useNavigate } from "react-router-dom";
@@ -10,9 +12,15 @@ function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-  const [accountCreated, setAccountCreated] = useState(false);
+  const [accountCreated, setAccountCreated] =
+    useRecoilState(accountCreatedAtom);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
 
   let navigate = useNavigate();
+
+  if (accountCreated) {
+    setIsLoggedIn(true);
+  }
 
   useEffect(() => {
     accountCreated && navigate("/success");

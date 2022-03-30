@@ -5,15 +5,14 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Success from "./components/Success";
 import Videos from "./components/Videos";
 import TopVideos from "./components/TopVideos";
+import { isLoggedInAtom } from "./atoms/global";
+import { useRecoilValue } from "recoil";
 
 function App() {
-  return (
+  const isLoggedIn = useRecoilValue(isLoggedInAtom);
+
+  return isLoggedIn ? (
     <Router>
-      <nav>
-        <Link to="/success" className="success-page">
-          success page
-        </Link>
-      </nav>
       <Routes>
         <Route
           path="/"
@@ -27,6 +26,12 @@ function App() {
         <Route path="/videos" element={<Videos />} />
         <Route path="/topvideos" element={<TopVideos />} />
       </Routes>
+    </Router>
+  ) : (
+    <Router>
+      <>
+        <Register /> <Login />
+      </>
     </Router>
   );
 }

@@ -328,6 +328,19 @@ app.post("/api/downvoteclick", async (req, res) => {
     .then((result) => res.send(result[0]).status(200));
 });
 
+//delete video if it has -2 votes
+app.post("/api/deletevid", async (req, res) => {
+  return sequelize
+    .query(`DELETE FROM videos WHERE votes < -1`)
+    .then(res.status(200));
+});
+//delete comment if it has -2 votes
+app.post("/api/deletecomment", async (req, res) => {
+  return sequelize
+    .query(`DELETE FROM comments WHERE votes < -1`)
+    .then(res.status(200));
+});
+
 //#
 //app listen
 app.listen(PORT, () => {

@@ -28,8 +28,17 @@ function TopVideos() {
   }, []);
   console.log(url, name, username);
 
-  //need videos url, name, votes and user that posted it
+  //delete videos that have -2 votes
+  useEffect(() => {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/deletevid",
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }, []);
 
+  //need videos url, name, votes and user that posted it
   const handleSubmit1 = (e) => {
     e.preventDefault();
     axios({

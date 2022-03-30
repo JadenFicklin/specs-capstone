@@ -9,6 +9,7 @@ import { isLoggedInAtom } from "../atoms/global";
 import { vidAtom } from "../atoms/global";
 import { useRecoilState } from "recoil";
 import Component2 from "./Component2";
+import useLockVotes from "./useLockVotes";
 
 function Videos() {
   //button press animation effect
@@ -42,7 +43,10 @@ function Videos() {
   //add comments
   const [userComment, setUserComment] = useState("");
   const [holdComments, setHoldComments] = useState([]);
-  console.log(holdComments);
+
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
+
+  const { checkVotes, lockVotes, checkComments, lockComments } = useLockVotes;
 
   //timer for button animations
   useEffect(() => {
@@ -69,116 +73,9 @@ function Videos() {
     !comments && setTimeout(() => setComments(true), 200);
   }, [comments]);
 
-  //allows user to use arrows to navigate webpage
-  const handleUserKeyPress = ({ key }) => {
-    key === "ArrowUp" && setButton2(false);
-    key === "ArrowDown" && setButton(false);
-    key === "ArrowLeft" && setButton3(false);
-    key === "ArrowRight" && setButton4(false);
-  };
   useEffect(() => {
-    window.addEventListener("keydown", handleUserKeyPress);
-    return () => {
-      window.removeEventListener("keydown", handleUserKeyPress);
-    };
-  }, []);
-  /////////////////////////////
-  //a
-  //display video & capture it
-  // const displayCaptureDelete = useEffect(() => {
-  //b
-  //display
-  //   axios({
-  //     method: "POST",
-  //     url: "http://localhost:5000/api/displayvideo",
-  //     data: {
-  //       username: username,
-  //     },
-  //   }).then((res) => setVid(res.data));
-  // }, []);
-
-  //c
-  //delete video from vids and add to watched
-  // const nextVid = () => {
-  //   axios({
-  //     method: "POST",
-  //     url: "http://localhost:5000/api/deletevideo",
-  //     data: {
-  //       username: username,
-  //       vid: vid,
-  //     },
-  //   }).then((res) => console.log(res));
-  //d
-  //grab new random vid and setVid to it
-  //   axios({
-  //     method: "POST",
-  //     url: "http://localhost:5000/api/getnewrandomvideo",
-  //     data: {
-  //       username: username,
-  //       vid: vid,
-  //     },
-  //   }).then((res) => setVid(res.data));
-  // };
-  //e
-  //display previous video
-  // const previousClick = () => {
-  //   axios({
-  //     method: "POST",
-  //     url: "http://localhost:5000/api/previousvid",
-  //     data: {
-  //       username: username,
-  //     },
-  //   })
-  //     .then((res) => setVid(res.data))
-  //     .catch((err) => console.log(err));
-  // };
-  //f
-  //remove vid info in database when user logs out
-  // const removeVidInfo = () => {
-  //   axios({
-  //     method: "POST",
-  //     url: "http://localhost:5000/api/removevidinfo",
-  //     data: {
-  //       username: username,
-  //     },
-  //   }).then((res) => console.log(res));
-  // };
-
-  useEffect(() => {
-    axios({
-      method: "GET",
-      url: "http://localhost:5000/api/getdatabasevideos",
-    })
-      .then((res) => {
-        if (index < 0) {
-          setIndex(0);
-        } else if (index > res.data.length) {
-          setIndex(res.data.length - 1);
-        } else {
-          setVid(res.data[index].url);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, [button4, button3]);
-
-  //3
-  //add video info to database
-  const handleSubmit1 = (e) => {
-    e.preventDefault();
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/uploadvideo",
-      data: {
-        url: url,
-        name: name,
-        username: username,
-      },
-    })
-      .then(() => {
-        console.log("video uploaded");
-      })
-      .catch((err) => console.log(err));
-  };
+    username && vid && checkVotes(username, vid, setAlreadyVoted);
+  }, [username, vid]);
 
   //4
   //downvotes
@@ -201,6 +98,104 @@ function Videos() {
         url: vid,
       },
     }).then((res) => console.log(res));
+  };
+
+  const handleArrowUp = () => {
+    setButton2(false);
+    handleUpvoteVideo();
+  };
+  const handleArrowDown = () => {
+    setButton(false);
+    handleDownvoteVideo();
+  };
+
+  const handleArrowLeft = () => {
+    setButton3(false);
+    setIndex(index - 1);
+  };
+
+  const handleArrowRight = () => {
+    setButton4(false);
+    setIndex(index + 1);
+  };
+
+  //allows user to use arrows to navigate webpage
+  const handleUserKeyPress = ({ key }) => {
+    key === "ArrowUp" && handleArrowUp();
+    key === "ArrowDown" && handleArrowDown();
+    key === "ArrowLeft" && handleArrowLeft();
+    key === "ArrowRight" && handleArrowRight();
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleUserKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleUserKeyPress);
+    };
+  }, [index]);
+
+  //delete comments if it hits -2 votes
+  useEffect(() => {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/deletecomment",
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const downVote = () => {
+    if (!alreadyVoted) {
+      lockVotes(username, vid);
+      setButton(!button);
+      setAlreadyVoted(true);
+      handleDownvoteVideo();
+    }
+  };
+
+  const upVote = () => {
+    if (!alreadyVoted) {
+      lockVotes(username, vid);
+      setButton2(!button2);
+      setAlreadyVoted(true);
+      handleUpvoteVideo();
+    }
+  };
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: "http://localhost:5000/api/getdatabasevideos",
+    })
+      .then((res) => {
+        if (index < 0) {
+          setIndex(0);
+        } else if (index > res.data.length) {
+          setIndex(res.data.length - 1);
+        } else {
+          setVid(res.data[index].url);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [button4, button3, setIndex]);
+
+  //3
+  //add video info to database
+  const handleSubmit1 = (e) => {
+    e.preventDefault();
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/api/uploadvideo",
+      data: {
+        url: url,
+        name: name,
+        username: username,
+      },
+    })
+      .then(() => {
+        console.log("video uploaded");
+      })
+      .catch((err) => console.log(err));
   };
   //6
   //display name and votes in stats box
@@ -332,13 +327,7 @@ function Videos() {
         )}
         {/* button */}
         {button ? (
-          <div
-            className="videos-downvote"
-            onClick={() => {
-              setButton(!button);
-              handleDownvoteVideo();
-            }}
-          >
+          <div className="videos-downvote" onClick={() => downVote()}>
             <div className="arrow1"></div>
           </div>
         ) : (
@@ -351,18 +340,13 @@ function Videos() {
         )}
         {/* button2 */}
         {button2 ? (
-          <div
-            className="videos-upvote"
-            onClick={() => {
-              setButton2(!button2);
-              handleUpvoteVideo();
-            }}
-          >
+          <div className="videos-upvote" disabled onClick={() => upVote()}>
             <div className="arrow2"></div>
           </div>
         ) : (
           <div
             className="videos-upvote-after"
+            disabled
             onClick={() => setButton2(!button2)}
           >
             <div className="arrow2"></div>
