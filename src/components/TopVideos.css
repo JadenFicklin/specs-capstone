@@ -69,7 +69,7 @@
 
 .top-blue-background {
   width: 100%;
-  height: 190%;
+  height: auto;
   background-color: #18acd0;
   display: flex;
   justify-content: center;

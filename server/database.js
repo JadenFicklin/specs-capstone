@@ -52,154 +52,162 @@ app.post("/api/login", async (req, res) => {
     `SELECT * FROM users WHERE username='${username}' AND password='${password}'`
   );
   if (userCheck2[0][0]) {
-    const geturls = await sequelize.query(`SELECT url FROM videos`);
-    const holdAsArray = [];
-    for (let i = 0; i < geturls[0].length; i++) {
-      holdAsArray.push(geturls[0][i].url);
-    }
-    const holdAsString = holdAsArray.join(",");
+    // const geturls = await sequelize.query(`SELECT url FROM videos`);
+    // const holdAsArray = [];
+    // for (let i = 0; i < geturls[0].length; i++) {
+    //   holdAsArray.push(geturls[0][i].url);
+    // }
+    // const holdAsString = holdAsArray.join(",");
 
-    const update = sequelize.query(
-      `UPDATE users SET vids='${holdAsString}' WHERE username = '${username}'`
-    );
+    // const update = sequelize.query(
+    //   `UPDATE users SET vids='${holdAsString}' WHERE username = '${username}'`
+    // );
     res.send(true).status(200);
   } else {
     res.send(false).status(200);
   }
 });
 
-//b
-//display random vid
-app.post("/api/displayvideo", async (req, res) => {
-  const { username } = req.body;
+// //b
+// //display random vid
+// app.post("/api/displayvideo", async (req, res) => {
+//   const { username } = req.body;
 
-  const geturls = await sequelize.query(
-    `SELECT vids FROM users WHERE username='${username}'`
-  );
-  const getString = geturls?.[0]?.[0]?.vids;
-  if (getString) {
-    const setBackToArray = getString.split(",");
+//   const geturls = await sequelize.query(
+//     `SELECT vids FROM users WHERE username='${username}'`
+//   );
+//   const getString = geturls?.[0]?.[0]?.vids;
+//   if (getString) {
+//     const setBackToArray = getString.split(",");
 
-    const updateArray = [];
-    const undifinedArray = [];
-    for (let i = 0; i < setBackToArray.length; i++) {
-      if (setBackToArray[i] === "undefined") {
-        undifinedArray.push(setBackToArray[i]);
-      } else {
-        updateArray.push(setBackToArray[i]);
-      }
-    }
-    const randomVid =
-      updateArray[Math.floor(Math.random() * updateArray.length)];
+//     const updateArray = [];
+//     const undifinedArray = [];
+//     for (let i = 0; i < setBackToArray.length; i++) {
+//       if (setBackToArray[i] === "undefined") {
+//         undifinedArray.push(setBackToArray[i]);
+//       } else {
+//         updateArray.push(setBackToArray[i]);
+//       }
+//     }
+//     const randomVid =
+//       updateArray[Math.floor(Math.random() * updateArray.length)];
 
-    return res.send(randomVid).status(200);
-  } else {
-    res.send([]).status(200);
-  }
-});
-//c
-//delete vid from user database
-app.post("/api/deletevideo", async (req, res) => {
-  const { username, vid } = req.body;
-  const geturls = await sequelize.query(
-    `SELECT vids FROM users WHERE username='${username}'`
-  );
+//     return res.send(randomVid).status(200);
+//   } else {
+//     res.send([]).status(200);
+//   }
+// });
+// //c
+// //delete vid from user database
+// app.post("/api/deletevideo", async (req, res) => {
+//   const { username, vid } = req.body;
+//   const geturls = await sequelize.query(
+//     `SELECT vids FROM users WHERE username='${username}'`
+//   );
 
-  const urls = geturls?.[0]?.[0]?.vids;
+//   const urls = geturls?.[0]?.[0]?.vids;
 
-  if (urls) {
-    const setBackToArray = urls?.split(",");
-    const updateArray = [];
-    const undifinedArray = [];
-    for (let i = 0; i < setBackToArray.length; i++) {
-      if (setBackToArray[i] === "undefined") {
-        undifinedArray.push(setBackToArray[i]);
-      } else {
-        updateArray.push(setBackToArray[i]);
-      }
-    }
-    const newArray = [];
-    const oldArray = [];
-    for (let i = 0; i < updateArray.length; i++) {
-      if (updateArray[i] === vid) {
-        oldArray.push(updateArray[i]);
-      } else {
-        newArray.push(updateArray[i]);
-      }
-    }
-    const getWatched = await sequelize.query(
-      `SELECT watched FROM users WHERE username='${username}'`
-    );
-    const previouslyWatched = getWatched[0][0].watched;
+//   if (urls) {
+//     const setBackToArray = urls?.split(",");
+//     const updateArray = [];
+//     const undifinedArray = [];
+//     for (let i = 0; i < setBackToArray.length; i++) {
+//       if (setBackToArray[i] === "undefined") {
+//         undifinedArray.push(setBackToArray[i]);
+//       } else {
+//         updateArray.push(setBackToArray[i]);
+//       }
+//     }
+//     const newArray = [];
+//     const oldArray = [];
+//     for (let i = 0; i < updateArray.length; i++) {
+//       if (updateArray[i] === vid) {
+//         oldArray.push(updateArray[i]);
+//       } else {
+//         newArray.push(updateArray[i]);
+//       }
+//     }
+//     const getWatched = await sequelize.query(
+//       `SELECT watched FROM users WHERE username='${username}'`
+//     );
+//     const previouslyWatched = getWatched[0][0].watched;
 
-    const setUserVidsToNewString = sequelize.query(
-      `UPDATE users SET vids='${newArray}' WHERE username = '${username}'`
-    );
-    const setUserWatchedToNewString = sequelize.query(
-      `UPDATE users SET watched='${
-        oldArray + "," + previouslyWatched
-      }' WHERE username = '${username}'`
-    );
-  }
-});
+//     const setUserVidsToNewString = sequelize.query(
+//       `UPDATE users SET vids='${newArray}' WHERE username = '${username}'`
+//     );
+//     const setUserWatchedToNewString = sequelize.query(
+//       `UPDATE users SET watched='${
+//         oldArray + "," + previouslyWatched
+//       }' WHERE username = '${username}'`
+//     );
+//   }
+// });
 
-//d
-//grab new random vid and setVid to it
-app.post("/api/getnewrandomvideo", async (req, res) => {
-  const { username, vid } = req.body;
+// //d
+// //grab new random vid and setVid to it
+// app.post("/api/getnewrandomvideo", async (req, res) => {
+//   const { username, vid } = req.body;
 
-  const getvids = await sequelize.query(
-    `SELECT vids FROM users WHERE username='${username}'`
-  );
-  const holdVids = getvids?.[0]?.[0]?.vids;
+//   const getvids = await sequelize.query(
+//     `SELECT vids FROM users WHERE username='${username}'`
+//   );
+//   const holdVids = getvids?.[0]?.[0]?.vids;
 
-  if (holdVids) {
-    const splitVids = holdVids.split(",");
-    const randomVid = splitVids[Math.floor(Math.random() * splitVids.length)];
-    console.log(randomVid);
-    return res.send(randomVid).status(200);
-  } else {
-    return res.send([]).status(200);
-  }
-});
-//e
-//previousvid
-app.post("/api/previousvid", async (req, res) => {
-  const { username } = req.body;
+//   if (holdVids) {
+//     const splitVids = holdVids.split(",");
+//     const randomVid = splitVids[Math.floor(Math.random() * splitVids.length)];
+//     console.log(randomVid);
+//     return res.send(randomVid).status(200);
+//   } else {
+//     return res.send([]).status(200);
+//   }
+// });
+// //e
+// //previousvid
+// app.post("/api/previousvid", async (req, res) => {
+//   const { username } = req.body;
 
-  const geturl = await sequelize.query(
-    `SELECT watched FROM users WHERE username='${username}'`
-  );
-  const getString = geturl?.[0]?.[0]?.watched;
+//   const geturl = await sequelize.query(
+//     `SELECT watched FROM users WHERE username='${username}'`
+//   );
+//   const getString = geturl?.[0]?.[0]?.watched;
 
-  if (getString) {
-    const getArray = getString.split(",");
-    const notWanted = [];
-    const urls = [];
-    for (let i = 0; i < getArray.length; i++) {
-      if (getArray[i].includes("http")) {
-        urls.unshift(getArray[i]);
-      } else {
-        notWanted.push(getArray[i]);
-      }
-    }
-    const toString = urls.join(",");
-    const mostRecentVideo = urls[0];
-    const updatedWatched = sequelize.query(
-      `UPDATE users SET watched='${toString}' WHERE username = '${username}'`
-    );
-    return res.send(mostRecentVideo).status(200);
-  } else {
-    return res.send([]).status(200);
-  }
-});
-//f
-//removevidinfo
-app.post("/api/removevidinfo", async (req, res) => {
-  const removeVids = sequelize.query(`UPDATE users
-  SET vids = null`);
-  const removeWatched = sequelize.query(`UPDATE users
-  SET watched = null`);
+//   if (getString) {
+//     const getArray = getString.split(",");
+//     const notWanted = [];
+//     const urls = [];
+//     for (let i = 0; i < getArray.length; i++) {
+//       if (getArray[i].includes("http")) {
+//         urls.unshift(getArray[i]);
+//       } else {
+//         notWanted.push(getArray[i]);
+//       }
+//     }
+//     const toString = urls.join(",");
+//     const mostRecentVideo = urls[0];
+//     const updatedWatched = sequelize.query(
+//       `UPDATE users SET watched='${toString}' WHERE username = '${username}'`
+//     );
+//     return res.send(mostRecentVideo).status(200);
+//   } else {
+//     return res.send([]).status(200);
+//   }
+// });
+// //f
+// //removevidinfo
+// app.post("/api/removevidinfo", async (req, res) => {
+//   const removeVids = sequelize.query(`UPDATE users
+//   SET vids = null`);
+//   const removeWatched = sequelize.query(`UPDATE users
+//   SET watched = null`);
+// });
+
+//a
+//get all database videos
+app.get("/api/getdatabasevideos", async (req, res) => {
+  return sequelize
+    .query(`SELECT url FROM videos`)
+    .then((result) => res.send(result[0]).status(200));
 });
 
 //3

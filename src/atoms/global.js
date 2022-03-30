@@ -17,7 +17,7 @@ export const isLoggedInAtom = atom({
 
 export const vidAtom = atom({
   key: "vid",
-  default: "",
+  default: "https://www.youtube.com/watch?v=km2OPUctni4",
 });
 
 // const [username, setUsername] = useRecoilState(usernameAtom);

@@ -26,6 +26,7 @@ function TopVideos() {
       setData(sortData);
     });
   }, []);
+  console.log(url, name, username);
 
   //need videos url, name, votes and user that posted it
 
@@ -76,20 +77,16 @@ function TopVideos() {
               style={{ top: "138px" }}
               onSubmit={handleSubmit1}
             >
-              <div
-                className="video-url"
+              <div className="video-url">video url</div>
+              <div className="name-of-video">name of video</div>
+              <input
+                className="input-box-url"
                 onChange={(e) => setUrl(e.target.value)}
-              >
-                video url
-              </div>
-              <div
-                className="name-of-video"
+              ></input>
+              <input
+                className="input-box-name"
                 onChange={(e) => setName(e.target.value)}
-              >
-                name of video
-              </div>
-              <input className="input-box-url"></input>
-              <input className="input-box-name"></input>
+              ></input>
               <button className="videos-submit">SUBMIT</button>
             </form>
           )}

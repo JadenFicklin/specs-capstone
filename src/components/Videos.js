@@ -37,6 +37,7 @@ function Videos() {
 
   //a-z
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInAtom);
+  const [index, setIndex] = useState(0);
 
   //add comments
   const [userComment, setUserComment] = useState("");
@@ -84,64 +85,81 @@ function Videos() {
   /////////////////////////////
   //a
   //display video & capture it
-  const displayCaptureDelete = useEffect(() => {
-    //b
-    //display
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/displayvideo",
-      data: {
-        username: username,
-      },
-    }).then((res) => setVid(res.data));
-  }, []);
+  // const displayCaptureDelete = useEffect(() => {
+  //b
+  //display
+  //   axios({
+  //     method: "POST",
+  //     url: "http://localhost:5000/api/displayvideo",
+  //     data: {
+  //       username: username,
+  //     },
+  //   }).then((res) => setVid(res.data));
+  // }, []);
 
   //c
   //delete video from vids and add to watched
-  const nextVid = () => {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/deletevideo",
-      data: {
-        username: username,
-        vid: vid,
-      },
-    }).then((res) => console.log(res));
-    //d
-    //grab new random vid and setVid to it
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/getnewrandomvideo",
-      data: {
-        username: username,
-        vid: vid,
-      },
-    }).then((res) => setVid(res.data));
-  };
+  // const nextVid = () => {
+  //   axios({
+  //     method: "POST",
+  //     url: "http://localhost:5000/api/deletevideo",
+  //     data: {
+  //       username: username,
+  //       vid: vid,
+  //     },
+  //   }).then((res) => console.log(res));
+  //d
+  //grab new random vid and setVid to it
+  //   axios({
+  //     method: "POST",
+  //     url: "http://localhost:5000/api/getnewrandomvideo",
+  //     data: {
+  //       username: username,
+  //       vid: vid,
+  //     },
+  //   }).then((res) => setVid(res.data));
+  // };
   //e
   //display previous video
-  const previousClick = () => {
-    axios({
-      method: "POST",
-      url: "http://localhost:5000/api/previousvid",
-      data: {
-        username: username,
-      },
-    })
-      .then((res) => setVid(res.data))
-      .catch((err) => console.log(err));
-  };
+  // const previousClick = () => {
+  //   axios({
+  //     method: "POST",
+  //     url: "http://localhost:5000/api/previousvid",
+  //     data: {
+  //       username: username,
+  //     },
+  //   })
+  //     .then((res) => setVid(res.data))
+  //     .catch((err) => console.log(err));
+  // };
   //f
   //remove vid info in database when user logs out
-  const removeVidInfo = () => {
+  // const removeVidInfo = () => {
+  //   axios({
+  //     method: "POST",
+  //     url: "http://localhost:5000/api/removevidinfo",
+  //     data: {
+  //       username: username,
+  //     },
+  //   }).then((res) => console.log(res));
+  // };
+
+  useEffect(() => {
     axios({
-      method: "POST",
-      url: "http://localhost:5000/api/removevidinfo",
-      data: {
-        username: username,
-      },
-    }).then((res) => console.log(res));
-  };
+      method: "GET",
+      url: "http://localhost:5000/api/getdatabasevideos",
+    })
+      .then((res) => {
+        if (index < 0) {
+          setIndex(0);
+        } else if (index > res.data.length) {
+          setIndex(res.data.length - 1);
+        } else {
+          setVid(res.data[index].url);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [button4, button3]);
 
   //3
   //add video info to database
@@ -238,7 +256,7 @@ function Videos() {
         onClick={() => {
           navigate("/");
           setIsLoggedIn(false);
-          removeVidInfo();
+          // removeVidInfo();
         }}
       >
         log out
@@ -356,7 +374,8 @@ function Videos() {
             className="videos-left"
             onClick={() => {
               setButton3(!button3);
-              previousClick();
+              setIndex(index - 1);
+              // previousClick();
             }}
           >
             <div className="arrow3"></div>
@@ -375,7 +394,8 @@ function Videos() {
             className="videos-right"
             onClick={() => {
               setButton4(!button4);
-              nextVid();
+              setIndex(index + 1);
+              // nextVid();
             }}
           >
             <div className="arrow4"></div>
@@ -457,3 +477,11 @@ function Videos() {
 }
 
 export default Videos;
+
+// const [vid, setVid] = useState('http://youtube.com/firstvideo/alsjdkg/asldgkj/')
+
+// receive array of objects with vidurl in the frontend
+// const index = 0
+// onbuttonClick = index + 1
+// onbuttonBackClick = index - 1
+// setVid(array[index].vidurl)
