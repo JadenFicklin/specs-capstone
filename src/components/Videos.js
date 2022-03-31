@@ -121,8 +121,8 @@ function Videos() {
 
   //allows user to use arrows to navigate webpage
   const handleUserKeyPress = ({ key }) => {
-    key === "ArrowUp" && handleArrowUp();
-    key === "ArrowDown" && handleArrowDown();
+    // key === "ArrowUp" && handleArrowUp();
+    // key === "ArrowDown" && handleArrowDown();
     key === "ArrowLeft" && handleArrowLeft();
     key === "ArrowRight" && handleArrowRight();
   };
@@ -226,8 +226,6 @@ function Videos() {
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   };
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //display comments
   const handleCommentsClick = () => {
     axios({
@@ -420,17 +418,6 @@ function Videos() {
             className="comments-box"
             onSubmit={(e) => handleCommentSubmit(e)}
           >
-            {/* {data?.map((object, index) => {
-              return (
-                <Component2
-                  objectUrl={object.url}
-                  name={object.name}
-                  votes={object.votes}
-                  username={object.username}
-                />
-              );
-            })} */}
-            {/* {JSON.stringify(holdComments)} */}
             {holdComments.map((object, index) => {
               return (
                 <Component2
@@ -462,11 +449,3 @@ function Videos() {
 }
 
 export default Videos;
-
-// const [vid, setVid] = useState('http://youtube.com/firstvideo/alsjdkg/asldgkj/')
-
-// receive array of objects with vidurl in the frontend
-// const index = 0
-// onbuttonClick = index + 1
-// onbuttonBackClick = index - 1
-// setVid(array[index].vidurl)
