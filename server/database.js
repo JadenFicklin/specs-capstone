@@ -8,7 +8,7 @@ const { default: axios } = require("axios");
 const { query } = require("express");
 const _ = require("lodash");
 const { useRecoilStoreID } = require("recoil");
-// const bcrypt = require("bcrypt"); ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -31,7 +31,7 @@ const sequelize = new Sequelize(DATABASE_URL, {
 app.post("/api/register", async (req, res) => {
   const { username, firstname, lastname, password } = req.body;
 
-  // const hash = bcrypt.hashSync(password, 10); ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const hash = bcrypt.hashSync(password, 10);
 
   let userCheck = await sequelize.query(
     `SELECT username FROM users WHERE username='${username}'`
@@ -42,8 +42,7 @@ app.post("/api/register", async (req, res) => {
   } else {
     return sequelize
       .query(
-        `INSERT INTO users (username, firstname, lastname, password, watched ) VALUES ('${username}', '${firstname}', '${lastname}', '${password}', ARRAY[''])`
-        //change '${password}' with '${hash}' ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        `INSERT INTO users (username, firstname, lastname, password) VALUES ('${username}', '${firstname}', '${lastname}', '${hash}')`
       )
       .then((result) => res.send(true).status(200));
   }
@@ -52,15 +51,15 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
-  const userCheck2 = await sequelize.query(
-    `SELECT * FROM users WHERE username='${username}' AND password='${password}'`
-  );
-  // change if (userCheck2[0][0]) with if (bcrypt.compareSync(password, result[0][0].password))
-  if (userCheck2[0][0]) {
-    res.send(true).status(200);
-  } else {
-    res.send(false).status(200);
-  }
+  return sequelize
+    .query(`SELECT * FROM users WHERE username='${username}'`)
+    .then((result) => {
+      if (bcrypt.compareSync(password, result[0][0].password)) {
+        res.send(true).status(200);
+      } else {
+        res.send(false).status(200);
+      }
+    });
 });
 
 //a
