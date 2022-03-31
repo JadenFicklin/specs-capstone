@@ -7,7 +7,7 @@ import { atom } from "recoil";
 
 export const usernameAtom = atom({
   key: "username",
-  default: "f",
+  default: "",
 });
 
 export const isLoggedInAtom = atom({

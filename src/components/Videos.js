@@ -242,17 +242,15 @@ function Videos() {
   const videoSrc = Logo;
   let navigate = useNavigate();
 
+  const handleLogoutClick = () => {
+    navigate("/");
+    setIsLoggedIn(false);
+    console.log(isLoggedIn);
+  };
+
   return (
     <>
-      <button
-        className="videos-logout"
-        onClick={() => {
-          navigate("/");
-          setIsLoggedIn(false);
-
-          // removeVidInfo();
-        }}
-      >
+      <button className="videos-logout" onClick={() => handleLogoutClick()}>
         log out
       </button>
       <div className="videos-outer">

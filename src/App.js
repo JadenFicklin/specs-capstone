@@ -11,27 +11,36 @@ import { useRecoilValue } from "recoil";
 function App() {
   const isLoggedIn = useRecoilValue(isLoggedInAtom);
 
-  return isLoggedIn ? (
+  return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Register /> <Login />
-            </>
-          }
-        />
-        <Route path="/success" element={<Success />} />
-        <Route path="/videos" element={<Videos />} />
-        <Route path="/topvideos" element={<TopVideos />} />
+        {isLoggedIn ? (
+          <>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Register /> <Login />
+                </>
+              }
+            />
+            <Route path="/success" element={<Success />} />
+            <Route path="/videos" element={<Videos />} />
+            <Route path="/topvideos" element={<TopVideos />} />
+          </>
+        ) : (
+          <>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Register /> <Login />
+                </>
+              }
+            />
+          </>
+        )}
       </Routes>
-    </Router>
-  ) : (
-    <Router>
-      <>
-        <Register /> <Login />
-      </>
     </Router>
   );
 }
