@@ -21,12 +21,14 @@ function TopVideos() {
   //7
   //get all videos
   useEffect(() => {
-    axios.get("http://localhost:5000/api/topvideos").then((res) => {
-      const sortData = res.data.sort(
-        (a, b) => parseFloat(b.votes) - parseFloat(a.votes)
-      );
-      setData(sortData);
-    });
+    axios
+      .get("http://capstone-2-jf.herokuapp.com/api/topvideos")
+      .then((res) => {
+        const sortData = res.data.sort(
+          (a, b) => parseFloat(b.votes) - parseFloat(a.votes)
+        );
+        setData(sortData);
+      });
   }, []);
   console.log(url, name, username);
 
@@ -34,7 +36,7 @@ function TopVideos() {
   useEffect(() => {
     axios({
       method: "POST",
-      url: "http://localhost:5000/api/deletevid",
+      url: "http://capstone-2-jf.herokuapp.com/api/deletevid",
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -45,7 +47,7 @@ function TopVideos() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://localhost:5000/api/uploadvideo",
+      url: "http://capstone-2-jf.herokuapp.com/api/uploadvideo",
       data: {
         url: url,
         name: name,

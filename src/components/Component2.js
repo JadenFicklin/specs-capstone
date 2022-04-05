@@ -5,7 +5,7 @@ function Component2(props) {
   const handleUpvoteClick = () => {
     axios({
       method: "POST",
-      url: "http://localhost:5000/api/upvoteclick",
+      url: "http://capstone-2-jf.herokuapp.com/api/upvoteclick",
       data: {
         comment: props.comment,
       },
@@ -17,7 +17,7 @@ function Component2(props) {
   const handleDownvoteClick = () => {
     axios({
       method: "POST",
-      url: "http://localhost:5000/api/downvoteclick",
+      url: "http://capstone-2-jf.herokuapp.com/api/downvoteclick",
       data: {
         comment: props.comment,
       },

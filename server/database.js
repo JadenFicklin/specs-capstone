@@ -9,11 +9,16 @@ const { query } = require("express");
 const _ = require("lodash");
 const { useRecoilStoreID } = require("recoil");
 const bcrypt = require("bcrypt");
+//added for hosting
+const path = require("path");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+//added for hosting
+app.use(express.static(path.resolve(__dirname, "../build")));
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialect: "postgres",
@@ -54,10 +59,13 @@ app.post("/api/login", async (req, res) => {
   return sequelize
     .query(`SELECT * FROM users WHERE username='${username}'`)
     .then((result) => {
-      if (bcrypt.compareSync(password, result[0][0].password)) {
-        res.send(true).status(200);
-      } else {
-        res.send(false).status(200);
+      if (result[1].rowCount) {
+        if (bcrypt.compareSync(password, result[0][0].password)) {
+          // .password breaks server if user inputs wrong username
+          res.send(true).status(200);
+        } else {
+          res.send(false).status(200); //can you send back more than 2 things?
+        }
       }
     });
 });
@@ -199,6 +207,11 @@ app.post("/api/deletecomment", async (req, res) => {
   return sequelize
     .query(`DELETE FROM comments WHERE votes < -1`)
     .then(res.status(200));
+});
+
+//added for hosting
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "../build", "index.html"));
 });
 
 //#
