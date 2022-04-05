@@ -82,7 +82,7 @@ function Videos() {
   const handleDownvoteVideo = () => {
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/downvotevideo",
+      url: "https://capstone-2-jf.herokuapp.com/api/downvotevideo",
       data: {
         url: vid,
       },
@@ -93,7 +93,7 @@ function Videos() {
   const handleUpvoteVideo = () => {
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/upvotevideo",
+      url: "https://capstone-2-jf.herokuapp.com/api/upvotevideo",
       data: {
         url: vid,
       },
@@ -138,7 +138,7 @@ function Videos() {
   useEffect(() => {
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/deletecomment",
+      url: "https://capstone-2-jf.herokuapp.com/api/deletecomment",
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -165,7 +165,7 @@ function Videos() {
   useEffect(() => {
     axios({
       method: "GET",
-      url: "http://capstone-2-jf.herokuapp.com/api/getdatabasevideos",
+      url: "https://capstone-2-jf.herokuapp.com/api/getdatabasevideos",
     })
       .then((res) => {
         if (index < 0) {
@@ -185,7 +185,7 @@ function Videos() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/uploadvideo",
+      url: "https://capstone-2-jf.herokuapp.com/api/uploadvideo",
       data: {
         url: url,
         name: name,
@@ -202,7 +202,7 @@ function Videos() {
   const handleGetStats = () => {
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/getstats",
+      url: "https://capstone-2-jf.herokuapp.com/api/getstats",
       data: {
         url: vid,
       },
@@ -216,7 +216,7 @@ function Videos() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/addcomment",
+      url: "https://capstone-2-jf.herokuapp.com/api/addcomment",
       data: {
         vid: vid,
         username: username,
@@ -230,7 +230,7 @@ function Videos() {
   const handleCommentsClick = () => {
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/displaycomments",
+      url: "https://capstone-2-jf.herokuapp.com/api/displaycomments",
       data: {
         vid: vid,
       },

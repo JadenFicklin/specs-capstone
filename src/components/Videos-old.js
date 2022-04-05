@@ -75,7 +75,7 @@ function Videos() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/uploadvideo",
+      url: "https://capstone-2-jf.herokuapp.com/api/uploadvideo",
       data: {
         url: url,
         name: name,
@@ -92,7 +92,7 @@ function Videos() {
   useEffect(() => {
     axios({
       method: "GET",
-      url: "http://capstone-2-jf.herokuapp.com/api/capturevideos",
+      url: "https://capstone-2-jf.herokuapp.com/api/capturevideos",
     })
       .then((res) => {
         const randomurl =
@@ -102,7 +102,7 @@ function Videos() {
         //add to watched database
         axios({
           method: "POST",
-          url: "http://capstone-2-jf.herokuapp.com/api/addtowatched",
+          url: "https://capstone-2-jf.herokuapp.com/api/addtowatched",
           data: {
             randomurl: randomurl,
             username: username,
@@ -120,7 +120,7 @@ function Videos() {
     //get a random video from database
     axios({
       method: "GET",
-      url: "http://capstone-2-jf.herokuapp.com/api/getnewvid",
+      url: "https://capstone-2-jf.herokuapp.com/api/getnewvid",
     })
       .then((res) => {
         const randomurl =
@@ -129,7 +129,7 @@ function Videos() {
         //pull the watched videos so i can compare the 2 arrays
         axios({
           method: "POST",
-          url: "http://capstone-2-jf.herokuapp.com/api/getwatched",
+          url: "https://capstone-2-jf.herokuapp.com/api/getwatched",
           data: {
             username: username,
           },

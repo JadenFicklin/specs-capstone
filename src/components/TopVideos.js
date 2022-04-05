@@ -22,7 +22,7 @@ function TopVideos() {
   //get all videos
   useEffect(() => {
     axios
-      .get("http://capstone-2-jf.herokuapp.com/api/topvideos")
+      .get("https://capstone-2-jf.herokuapp.com/api/topvideos")
       .then((res) => {
         const sortData = res.data.sort(
           (a, b) => parseFloat(b.votes) - parseFloat(a.votes)
@@ -36,7 +36,7 @@ function TopVideos() {
   useEffect(() => {
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/deletevid",
+      url: "https://capstone-2-jf.herokuapp.com/api/deletevid",
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -47,7 +47,7 @@ function TopVideos() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/uploadvideo",
+      url: "https://capstone-2-jf.herokuapp.com/api/uploadvideo",
       data: {
         url: url,
         name: name,

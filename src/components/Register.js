@@ -32,7 +32,7 @@ function Register() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/register",
+      url: "https://capstone-2-jf.herokuapp.com/api/register",
       data: {
         username: username,
         firstname: firstName,

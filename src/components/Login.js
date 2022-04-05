@@ -33,7 +33,7 @@ function Login() {
     e.preventDefault();
     axios({
       method: "POST",
-      url: "http://capstone-2-jf.herokuapp.com/api/login",
+      url: "https://capstone-2-jf.herokuapp.com/api/login",
       data: {
         username: username,
         password: password,
